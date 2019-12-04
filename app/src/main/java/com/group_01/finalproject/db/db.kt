@@ -18,12 +18,14 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+    var dateFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 
-    var dateFormatter = SimpleDateFormat("dd-MM-yyyy HH:mm:ss")
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(SQL_CREATE_USER)
         db.execSQL(SQL_CREATE_PLANT)
+        db.execSQL(SQL_CREATE_IMAGE)
+        db.execSQL(SQL_CREATE_CARE)
 
     }
 
@@ -32,6 +34,8 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
         // to simply to discard the data and start over
         db.execSQL(SQL_DELETE_USER)
         db.execSQL(SQL_DELETE_PLANT)
+        db.execSQL(SQL_DELETE_IMAGE)
+        db.execSQL(SQL_DELETE_CARE)
         onCreate(db)
 
     }
@@ -274,11 +278,11 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
 
         values.put(DBContract.ImageEntry.PLANT_ID, image.plantID)
         values.put(DBContract.ImageEntry.LOCATION, image.location)
-        values.put(DBContract.ImageEntry.LAST_MODIFIED, image.lastModified.toString())
+        values.put(DBContract.ImageEntry.LAST_MODIFIED, dateFormatter.format(image.lastModified))
 
 
         // Insert the new row, returning the primary key value of the new row
-        val newRowId = db.insert(DBContract.PlantEntry.TABLE_NAME, null, values)
+        val newRowId = db.insert(DBContract.ImageEntry.TABLE_NAME, null, values)
 
         return newRowId
     }
@@ -352,7 +356,7 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
         // Create a new map of values, where column names are the keys
         val values = ContentValues()
 
-        values.put(DBContract.CareEntry.DATE, care.date.toString())
+        values.put(DBContract.CareEntry.DATE, dateFormatter.format(care.date))
         values.put(DBContract.CareEntry.CAPTION, care.caption)
         values.put(DBContract.CareEntry.PLANT_ID, care.plantID)
 
@@ -615,7 +619,7 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
                     "${DBContract.UserEntry.DIVERSITY_BADGE} INTEGER," +
                     "${DBContract.UserEntry.PHOTOS_BADGE} INTEGER," +
                     "${DBContract.UserEntry.GREEN_THUMB_BADGE} INTEGER," +
-                    "${DBContract.UserEntry.BADGE_OF_BADGES}"
+                    "${DBContract.UserEntry.BADGE_OF_BADGES})"
 
 
         private const val SQL_DELETE_USER =

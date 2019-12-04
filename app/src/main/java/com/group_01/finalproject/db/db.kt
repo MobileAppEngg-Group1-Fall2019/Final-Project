@@ -14,7 +14,7 @@ import java.text.DateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class LocalizationDBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(SQL_CREATE_USER)
@@ -260,6 +260,24 @@ class LocalizationDBHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         return plants
     }
 
+    fun insertImage(image: ImageModel): Long {
+        // Gets the data repository in write mode
+        val db = writableDatabase
+
+        // Create a new map of values, where column names are the keys
+        val values = ContentValues()
+
+        values.put(DBContract.ImageEntry.PLANT_ID, image.plantID)
+        values.put(DBContract.ImageEntry.LOCATION, image.location)
+        values.put(DBContract.ImageEntry.LAST_MODIFIED, image.lastModified.toString())
+
+
+        // Insert the new row, returning the primary key value of the new row
+        val newRowId = db.insert(DBContract.PlantEntry.TABLE_NAME, null, values)
+
+        return newRowId
+    }
+
 
     /**
      * Calculates the end-point from a given source at a given range (meters)
@@ -427,9 +445,9 @@ class LocalizationDBHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
 
         private const val SQL_CREATE_PLANT = "CREATE TABLE ${DBContract.PlantEntry.TABLE_NAME} (" +
                 "${DBContract.PlantEntry.PLANT_ID} INTEGER PRIMARY KEY," +
-                "${DBContract.PlantEntry.NAME} STRING," +
-                "${DBContract.PlantEntry.TYPE} STRING," +
-                "${DBContract.PlantEntry.STATUS} STRING," +
+                "${DBContract.PlantEntry.NAME} TEXT," +
+                "${DBContract.PlantEntry.TYPE} TEXT," +
+                "${DBContract.PlantEntry.STATUS} TEXT," +
                 "${DBContract.PlantEntry.INDOOR} INTEGER," +
                 "${DBContract.PlantEntry.AGE} INTEGER)"
 
@@ -439,11 +457,9 @@ class LocalizationDBHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
 
         private const val SQL_CREATE_IMAGE = "CREATE TABLE ${DBContract.ImageEntry.TABLE_NAME} (" +
                 "${DBContract.ImageEntry.IMAGE_ID} INTEGER PRIMARY KEY," +
-                "${DBContract.ImageEntry.LOCATiON} STRING," +
-                "${DBContract.ImageEntry.LAST_MODIFIED} DATE," +
+                "${DBContract.ImageEntry.LOCATION} TEXT," +
+                "${DBContract.ImageEntry.LAST_MODIFIED} TEXT," +
                 "${DBContract.ImageEntry.PLANT_ID} INTEGER," +
-                "${DBContract.PlantEntry.INDOOR} INTEGER," +
-                "${DBContract.PlantEntry.AGE} INTEGER, " +
                 "FOREIGN KEY(${DBContract.ImageEntry.PLANT_ID}) REFERENCES ${DBContract.PlantEntry.TABLE_NAME}(${DBContract.PlantEntry.PLANT_ID}) ON DELETE CASCADE)"
 
         private const val SQL_DELETE_IMAGE =

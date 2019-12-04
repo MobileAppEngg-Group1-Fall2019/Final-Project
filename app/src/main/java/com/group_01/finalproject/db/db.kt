@@ -11,10 +11,15 @@ import android.graphics.PointF
 import android.util.Log
 import androidx.annotation.IntegerRes
 import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
 
 class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+
+    var dateFormatter = SimpleDateFormat("dd-MM-yyyy HH:mm:ss")
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(SQL_CREATE_USER)
@@ -278,6 +283,179 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
         return newRowId
     }
 
+    fun readImage(imageId: Long): ArrayList<ImageModel> {
+        val plants = ArrayList<ImageModel>()
+        val db = writableDatabase
+        var cursor: Cursor? = null
+        val query =
+            "SELECT * FROM ${DBContract.ImageEntry.TABLE_NAME} WHERE ${DBContract.ImageEntry.IMAGE_ID} = ${imageId}"
+
+        try {
+            cursor = db.rawQuery(query, null)
+        } catch (e: SQLiteException) {
+            db.execSQL(SQL_CREATE_IMAGE)
+            return ArrayList()
+        }
+        var imageId: Long
+        var location: String
+        var lastModified: String
+        var plantId: Long
+
+        if (cursor!!.moveToFirst()) {
+            while (cursor.isAfterLast == false) {
+                imageId = cursor.getLong(cursor.getColumnIndex(DBContract.ImageEntry.IMAGE_ID))
+                location = cursor.getString(cursor.getColumnIndex(DBContract.ImageEntry.LOCATION))
+                lastModified = cursor.getString(cursor.getColumnIndex(DBContract.ImageEntry.LAST_MODIFIED))
+                plantId = cursor.getLong(cursor.getColumnIndex(DBContract.ImageEntry.PLANT_ID))
+                plants.add(ImageModel(imageId,plantId,location, dateFormatter.parse(lastModified)))
+                cursor.moveToNext()
+            }
+        }
+        return plants
+    }
+
+    fun readPlantImages(plantId: Long): ArrayList<ImageModel> {
+        val plants = ArrayList<ImageModel>()
+        val db = writableDatabase
+        var cursor: Cursor? = null
+        val query =
+            "SELECT * FROM ${DBContract.ImageEntry.TABLE_NAME} WHERE ${DBContract.ImageEntry.PLANT_ID} = ${plantId}"
+
+        try {
+            cursor = db.rawQuery(query, null)
+        } catch (e: SQLiteException) {
+            db.execSQL(SQL_CREATE_IMAGE)
+            return ArrayList()
+        }
+        var imageId: Long
+        var location: String
+        var lastModified: String
+        var plantId: Long
+
+        if (cursor!!.moveToFirst()) {
+            while (cursor.isAfterLast == false) {
+                imageId = cursor.getLong(cursor.getColumnIndex(DBContract.ImageEntry.IMAGE_ID))
+                location = cursor.getString(cursor.getColumnIndex(DBContract.ImageEntry.LOCATION))
+                lastModified = cursor.getString(cursor.getColumnIndex(DBContract.ImageEntry.LAST_MODIFIED))
+                plantId = cursor.getLong(cursor.getColumnIndex(DBContract.ImageEntry.PLANT_ID))
+                plants.add(ImageModel(imageId,plantId,location, dateFormatter.parse(lastModified)))
+                cursor.moveToNext()
+            }
+        }
+        return plants
+    }
+
+    fun insertCare(care: CareModel): Long {
+        // Gets the data repository in write mode
+        val db = writableDatabase
+
+        // Create a new map of values, where column names are the keys
+        val values = ContentValues()
+
+        values.put(DBContract.CareEntry.DATE, care.date.toString())
+        values.put(DBContract.CareEntry.CAPTION, care.caption)
+        values.put(DBContract.CareEntry.PLANT_ID, care.plantID)
+
+
+        // Insert the new row, returning the primary key value of the new row
+        val newRowId = db.insert(DBContract.CareEntry.TABLE_NAME, null, values)
+
+        return newRowId
+    }
+
+    fun readCare(careId: Long): ArrayList<CareModel> {
+        val cares = ArrayList<CareModel>()
+        val db = writableDatabase
+        var cursor: Cursor? = null
+        val query =
+            "SELECT * FROM ${DBContract.CareEntry.TABLE_NAME} WHERE ${DBContract.CareEntry.CARE_ID} = ${careId}"
+
+        try {
+            cursor = db.rawQuery(query, null)
+        } catch (e: SQLiteException) {
+            db.execSQL(SQL_CREATE_IMAGE)
+            return ArrayList()
+        }
+        var careId: Long
+        var date: String
+        var caption: String
+        var plantId: Long
+
+        if (cursor!!.moveToFirst()) {
+            while (cursor.isAfterLast == false) {
+                careId = cursor.getLong(cursor.getColumnIndex(DBContract.CareEntry.CARE_ID))
+                date = cursor.getString(cursor.getColumnIndex(DBContract.CareEntry.DATE))
+                caption = cursor.getString(cursor.getColumnIndex(DBContract.CareEntry.CAPTION))
+                plantId = cursor.getLong(cursor.getColumnIndex(DBContract.CareEntry.PLANT_ID))
+                cares.add(CareModel(careId, plantId, dateFormatter.parse(date), caption))
+                cursor.moveToNext()
+            }
+        }
+        return cares
+    }
+
+    fun readAllCare(careId: Long): ArrayList<CareModel> {
+        val cares = ArrayList<CareModel>()
+        val db = writableDatabase
+        var cursor: Cursor? = null
+        val query =
+            "SELECT * FROM ${DBContract.CareEntry.TABLE_NAME}"
+
+        try {
+            cursor = db.rawQuery(query, null)
+        } catch (e: SQLiteException) {
+            db.execSQL(SQL_CREATE_IMAGE)
+            return ArrayList()
+        }
+        var careId: Long
+        var date: String
+        var caption: String
+        var plantId: Long
+
+        if (cursor!!.moveToFirst()) {
+            while (cursor.isAfterLast == false) {
+                careId = cursor.getLong(cursor.getColumnIndex(DBContract.CareEntry.CARE_ID))
+                date = cursor.getString(cursor.getColumnIndex(DBContract.CareEntry.DATE))
+                caption = cursor.getString(cursor.getColumnIndex(DBContract.CareEntry.CAPTION))
+                plantId = cursor.getLong(cursor.getColumnIndex(DBContract.CareEntry.PLANT_ID))
+                cares.add(CareModel(careId, plantId, dateFormatter.parse(date), caption))
+                cursor.moveToNext()
+            }
+        }
+        return cares
+    }
+
+    fun readPlantCares(plantId: Long): ArrayList<CareModel> {
+        val cares = ArrayList<CareModel>()
+        val db = writableDatabase
+        var cursor: Cursor? = null
+        val query =
+            "SELECT * FROM ${DBContract.CareEntry.TABLE_NAME} WHERE ${DBContract.CareEntry.PLANT_ID} = ${plantId}"
+
+        try {
+            cursor = db.rawQuery(query, null)
+        } catch (e: SQLiteException) {
+            db.execSQL(SQL_CREATE_IMAGE)
+            return ArrayList()
+        }
+        var careId: Long
+        var date: String
+        var caption: String
+        var plantId: Long
+
+        if (cursor!!.moveToFirst()) {
+            while (cursor.isAfterLast == false) {
+                careId = cursor.getLong(cursor.getColumnIndex(DBContract.CareEntry.CARE_ID))
+                date = cursor.getString(cursor.getColumnIndex(DBContract.CareEntry.DATE))
+                caption = cursor.getString(cursor.getColumnIndex(DBContract.CareEntry.CAPTION))
+                plantId = cursor.getLong(cursor.getColumnIndex(DBContract.CareEntry.PLANT_ID))
+                cares.add(CareModel(careId, plantId, dateFormatter.parse(date), caption))
+                cursor.moveToNext()
+            }
+        }
+        return cares
+    }
+
 
     /**
      * Calculates the end-point from a given source at a given range (meters)
@@ -464,6 +642,16 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
 
         private const val SQL_DELETE_IMAGE =
             "DROP TABLE IF EXISTS ${DBContract.PlantEntry.TABLE_NAME}"
+
+        private const val SQL_CREATE_CARE = "CREATE TABLE ${DBContract.CareEntry.TABLE_NAME} (" +
+                "${DBContract.CareEntry.CARE_ID} INTEGER PRIMARY KEY," +
+                "${DBContract.CareEntry.DATE} TEXT," +
+                "${DBContract.CareEntry.CAPTION} TEXT," +
+                "${DBContract.CareEntry.PLANT_ID} INTEGER" +
+                "FOREIGN KEY(${DBContract.CareEntry.PLANT_ID} REFERENCES ${DBContract.PlantEntry.TABLE_NAME}(${DBContract.PlantEntry.PLANT_ID}) ON DELETE CASCADE)"
+
+        private const val SQL_DELETE_CARE =
+            "DROP TABLE IF EXISTS ${DBContract.CareEntry.TABLE_NAME}"
     }
 }
 

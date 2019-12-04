@@ -33,6 +33,9 @@ object DBContract {
         companion object {
             const val TABLE_NAME = "care"
             const val CARE_ID = "careid"
+            const val PLANT_ID = "plantid"
+            const val DATE = "date"
+            const val CAPTION = "caption"
         }
     }
 

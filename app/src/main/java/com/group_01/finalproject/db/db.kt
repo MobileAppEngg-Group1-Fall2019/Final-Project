@@ -235,7 +235,7 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
         return plants
     }
 
-    fun readAllPlants(plantId: Long): ArrayList<PlantModel> {
+    fun readAllPlants(): ArrayList<PlantModel> {
         val plants = ArrayList<PlantModel>()
         val db = writableDatabase
         var cursor: Cursor? = null

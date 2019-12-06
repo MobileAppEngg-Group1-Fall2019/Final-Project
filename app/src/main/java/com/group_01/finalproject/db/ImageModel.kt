@@ -5,6 +5,7 @@ import java.util.*
 class ImageModel(
     val imageID: Long,
     val plantID: Long,
-    val location: String,
+    val data: ByteArray,
     val lastModified: Date
+
 )

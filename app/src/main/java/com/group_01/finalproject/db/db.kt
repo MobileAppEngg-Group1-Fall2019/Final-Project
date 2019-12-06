@@ -277,7 +277,10 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
         val values = ContentValues()
 
         values.put(DBContract.ImageEntry.PLANT_ID, image.plantID)
-        values.put(DBContract.ImageEntry.LOCATION, image.location)
+
+        values.put(DBContract.ImageEntry.DATA, image.data)
+
+
         values.put(DBContract.ImageEntry.LAST_MODIFIED, dateFormatter.format(image.lastModified))
 
 
@@ -288,7 +291,7 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
     }
 
     fun readImage(imageId: Long): ArrayList<ImageModel> {
-        val plants = ArrayList<ImageModel>()
+        val images = ArrayList<ImageModel>()
         val db = writableDatabase
         var cursor: Cursor? = null
         val query =
@@ -301,25 +304,26 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
             return ArrayList()
         }
         var imageId: Long
-        var location: String
+        var location: String?
         var lastModified: String
-        var plantId: Long
+        var plantId: Long?
+        var data: ByteArray
 
         if (cursor!!.moveToFirst()) {
             while (cursor.isAfterLast == false) {
                 imageId = cursor.getLong(cursor.getColumnIndex(DBContract.ImageEntry.IMAGE_ID))
-                location = cursor.getString(cursor.getColumnIndex(DBContract.ImageEntry.LOCATION))
                 lastModified = cursor.getString(cursor.getColumnIndex(DBContract.ImageEntry.LAST_MODIFIED))
                 plantId = cursor.getLong(cursor.getColumnIndex(DBContract.ImageEntry.PLANT_ID))
-                plants.add(ImageModel(imageId,plantId,location, dateFormatter.parse(lastModified)))
+                data = cursor.getBlob(cursor.getColumnIndex(DBContract.ImageEntry.DATA))
+                images.add(ImageModel(imageId,plantId, data, dateFormatter.parse(lastModified)))
                 cursor.moveToNext()
             }
         }
-        return plants
+        return images
     }
 
     fun readPlantImages(plantId: Long): ArrayList<ImageModel> {
-        val plants = ArrayList<ImageModel>()
+        val images = ArrayList<ImageModel>()
         val db = writableDatabase
         var cursor: Cursor? = null
         val query =
@@ -332,21 +336,21 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
             return ArrayList()
         }
         var imageId: Long
-        var location: String
+        var data: ByteArray
         var lastModified: String
         var plantId: Long
 
         if (cursor!!.moveToFirst()) {
             while (cursor.isAfterLast == false) {
                 imageId = cursor.getLong(cursor.getColumnIndex(DBContract.ImageEntry.IMAGE_ID))
-                location = cursor.getString(cursor.getColumnIndex(DBContract.ImageEntry.LOCATION))
+                data = cursor.getBlob(cursor.getColumnIndex(DBContract.ImageEntry.DATA))
                 lastModified = cursor.getString(cursor.getColumnIndex(DBContract.ImageEntry.LAST_MODIFIED))
                 plantId = cursor.getLong(cursor.getColumnIndex(DBContract.ImageEntry.PLANT_ID))
-                plants.add(ImageModel(imageId,plantId,location, dateFormatter.parse(lastModified)))
+                images.add(ImageModel(imageId,plantId, data, dateFormatter.parse(lastModified)))
                 cursor.moveToNext()
             }
         }
-        return plants
+        return images
     }
 
     fun insertCare(care: CareModel): Long {
@@ -639,7 +643,7 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
 
         private const val SQL_CREATE_IMAGE = "CREATE TABLE ${DBContract.ImageEntry.TABLE_NAME} (" +
                 "${DBContract.ImageEntry.IMAGE_ID} INTEGER PRIMARY KEY," +
-                "${DBContract.ImageEntry.LOCATION} TEXT," +
+                "${DBContract.ImageEntry.DATA} BLOB," +
                 "${DBContract.ImageEntry.LAST_MODIFIED} TEXT," +
                 "${DBContract.ImageEntry.PLANT_ID} INTEGER," +
                 "FOREIGN KEY(${DBContract.ImageEntry.PLANT_ID}) REFERENCES ${DBContract.PlantEntry.TABLE_NAME}(${DBContract.PlantEntry.PLANT_ID}) ON DELETE CASCADE)"
@@ -651,8 +655,8 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
                 "${DBContract.CareEntry.CARE_ID} INTEGER PRIMARY KEY," +
                 "${DBContract.CareEntry.DATE} TEXT," +
                 "${DBContract.CareEntry.CAPTION} TEXT," +
-                "${DBContract.CareEntry.PLANT_ID} INTEGER" +
-                "FOREIGN KEY(${DBContract.CareEntry.PLANT_ID} REFERENCES ${DBContract.PlantEntry.TABLE_NAME}(${DBContract.PlantEntry.PLANT_ID}) ON DELETE CASCADE)"
+                "${DBContract.CareEntry.PLANT_ID} INTEGER," +
+                "FOREIGN KEY(${DBContract.CareEntry.PLANT_ID}) REFERENCES ${DBContract.PlantEntry.TABLE_NAME}(${DBContract.PlantEntry.PLANT_ID}) ON DELETE CASCADE)"
 
         private const val SQL_DELETE_CARE =
             "DROP TABLE IF EXISTS ${DBContract.CareEntry.TABLE_NAME}"

@@ -45,6 +45,7 @@ object DBContract {
             const val IMAGE_ID = "imageid"
             const val PLANT_ID = "plantid"
             const val LOCATION = "location"
+            const val DATA = "data"
             const val LAST_MODIFIED = "lastmodified"
         }
     }

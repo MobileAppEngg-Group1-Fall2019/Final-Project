@@ -4,11 +4,17 @@ import android.graphics.BitmapFactory
 import android.graphics.Bitmap
 import android.graphics.Bitmap.CompressFormat
 import java.io.ByteArrayOutputStream
+import java.net.URL
 
 
 object DbBitmapUtil {
 
-    fun imageToBitmap(location: String): Bitmap {
+    fun imageURLToBitmap(location: String): Bitmap {
+        var url: URL = URL(location)
+        return BitmapFactory.decodeStream(url.openStream());
+    }
+
+    fun imageFileToBitmap(location: String): Bitmap {
         return BitmapFactory.decodeFile(location)
     }
 

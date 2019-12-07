@@ -63,6 +63,7 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
         values.put(DBContract.UserEntry.PHOTOS_BADGE, user.photosBadge)
         values.put(DBContract.UserEntry.GREEN_THUMB_BADGE, user.greenThumbBadge)
         values.put(DBContract.UserEntry.BADGE_OF_BADGES, user.badgeOfBadges)
+        values.put(DBContract.UserEntry.CREATION_DATE, dateFormatter.format(user.creationDate))
 
         // Insert the new row, returning the primary key value of the new row
         val newRowId = db.insert(DBContract.UserEntry.TABLE_NAME, null, values)
@@ -91,6 +92,7 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
         var photosBadge: Int
         var greenThumbBadge: Int
         var badgeOfBadges: Int
+        var creationDate: String
 
         if (cursor!!.moveToFirst()) {
             while (cursor.isAfterLast == false) {
@@ -104,9 +106,11 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
                 photosBadge =
                     cursor.getInt(cursor.getColumnIndex(DBContract.UserEntry.PHOTOS_BADGE))
                 greenThumbBadge =
-                    cursor.getInt(cursor.getColumnIndex(DBContract.UserEntry.GREEN_THUMB_BADGE));
+                    cursor.getInt(cursor.getColumnIndex(DBContract.UserEntry.GREEN_THUMB_BADGE))
                 badgeOfBadges =
-                    cursor.getInt(cursor.getColumnIndex(DBContract.UserEntry.BADGE_OF_BADGES));
+                    cursor.getInt(cursor.getColumnIndex(DBContract.UserEntry.BADGE_OF_BADGES))
+                creationDate =
+                    cursor.getString(cursor.getColumnIndex(DBContract.UserEntry.CREATION_DATE))
                 users.add(
                     UserModel(
                         userId,
@@ -116,7 +120,8 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
                         diversityBadge,
                         photosBadge,
                         greenThumbBadge,
-                        badgeOfBadges
+                        badgeOfBadges,
+                        dateFormatter.parse(creationDate)
                     )
                 )
                 cursor.moveToNext()
@@ -145,6 +150,7 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
         var photosBadge: Int
         var greenThumbBadge: Int
         var badgeOfBadges: Int
+        var creationDate: String
 
         if (cursor!!.moveToFirst()) {
             while (cursor.isAfterLast == false) {
@@ -158,9 +164,11 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
                 photosBadge =
                     cursor.getInt(cursor.getColumnIndex(DBContract.UserEntry.PHOTOS_BADGE))
                 greenThumbBadge =
-                    cursor.getInt(cursor.getColumnIndex(DBContract.UserEntry.GREEN_THUMB_BADGE));
+                    cursor.getInt(cursor.getColumnIndex(DBContract.UserEntry.GREEN_THUMB_BADGE))
                 badgeOfBadges =
-                    cursor.getInt(cursor.getColumnIndex(DBContract.UserEntry.BADGE_OF_BADGES));
+                    cursor.getInt(cursor.getColumnIndex(DBContract.UserEntry.BADGE_OF_BADGES))
+                creationDate =
+                    cursor.getString(cursor.getColumnIndex(DBContract.UserEntry.CREATION_DATE))
                 checkIns.add(
                     UserModel(
                         userId,
@@ -170,7 +178,8 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
                         diversityBadge,
                         photosBadge,
                         greenThumbBadge,
-                        badgeOfBadges
+                        badgeOfBadges,
+                        dateFormatter.parse(creationDate)
                     )
                 )
                 cursor.moveToNext()
@@ -623,7 +632,8 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
                     "${DBContract.UserEntry.DIVERSITY_BADGE} INTEGER," +
                     "${DBContract.UserEntry.PHOTOS_BADGE} INTEGER," +
                     "${DBContract.UserEntry.GREEN_THUMB_BADGE} INTEGER," +
-                    "${DBContract.UserEntry.BADGE_OF_BADGES})"
+                    "${DBContract.UserEntry.BADGE_OF_BADGES} INTEGER," +
+                    "${DBContract.UserEntry.CREATION_DATE} TEXT)"
 
 
         private const val SQL_DELETE_USER =

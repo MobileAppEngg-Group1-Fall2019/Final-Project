@@ -1,5 +1,7 @@
 package com.group_01.finalproject.db
 
+import java.util.*
+
 class UserModel(
     val userId: Long,
     val name: String,
@@ -8,5 +10,6 @@ class UserModel(
     val diversityBadge: Int,
     val photosBadge: Int,
     val greenThumbBadge: Int,
-    val badgeOfBadges: Int
+    val badgeOfBadges: Int,
+    val creationDate: Date
 )

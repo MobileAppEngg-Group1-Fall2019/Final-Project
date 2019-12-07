@@ -10,11 +10,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <ImageView
+        <!--  just commenting out this imageview for now, I think felix used it to test if the images worked
+            <ImageView
             android:id="@+id/imageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_launcher_background" />
+            app:srcCompat="@drawable/ic_launcher_background" />  -->
     </LinearLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView

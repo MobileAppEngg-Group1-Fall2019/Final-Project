@@ -1,26 +1,27 @@
 package com.group_01.finalproject
 
-import android.graphics.Bitmap
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationManager
 import android.os.Bundle
+import android.os.StrictMode
 import android.util.Log
-import android.widget.ImageView
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.group_01.finalproject.db.*
-import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.util.*
-import android.os.StrictMode
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.group_01.finalproject.db.DBInterface
 import com.kwabenaberko.openweathermaplib.implementation.OpenWeatherMapHelper
-import com.kwabenaberko.openweathermaplib.constants.Lang
-import com.kwabenaberko.openweathermaplib.constants.Units
-import com.kwabenaberko.openweathermaplib.models.currentweather.CurrentWeather
 import com.kwabenaberko.openweathermaplib.implementation.callbacks.CurrentWeatherCallback
+import com.kwabenaberko.openweathermaplib.models.currentweather.CurrentWeather
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 
@@ -34,18 +35,44 @@ class MainActivity : AppCompatActivity() {
     private lateinit var dbHelper: DBInterface
     var timeZone = TimeZone.getTimeZone("EST")
     var dateFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+    private var longitude: Double = 0.0
+    private var latitude: Double = 0.0
+    private val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_NETWORK_STATE)
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val helper = OpenWeatherMapHelper(getString(R.string.OPEN_WEATHER_MAP_API_KEY))
-        helper.setLang(Lang.ENGLISH)
-        helper.setUnits(Units.IMPERIAL)
         /* Instantiate db and anything related */
         // dateFormatter.setTimeZone(timeZone)
         dbHelper = DBInterface(this)
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
+
+        // Get location upon opening app
+        val locManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+        val network_enabled = locManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+
+        val location: Location?
+
+        ActivityCompat.requestPermissions(this, permissions,0)
+
+        if (network_enabled && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NETWORK_STATE)
+            == PackageManager.PERMISSION_GRANTED) {
+
+            location = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+
+            if (location != null) {
+                longitude = location.longitude
+                latitude = location.latitude
+                Log.i("Location", "$longitude + $latitude")
+            }
+            Log.i("Location", "BAAAAD")
+        }
 
         helper.getCurrentWeatherByCityName("Accra", object : CurrentWeatherCallback {
             override fun onSuccess(currentWeather: CurrentWeather) {

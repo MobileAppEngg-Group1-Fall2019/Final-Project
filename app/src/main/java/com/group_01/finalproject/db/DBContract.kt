@@ -15,6 +15,8 @@ object DBContract {
             const val GREEN_THUMB_BADGE = "greenthumbbadge"
             const val BADGE_OF_BADGES = "badgeofbadges"
             const val CREATION_DATE = "creationdate"
+            const val LAT = "lat"
+            const val LONG = "long"
         }
     }
 

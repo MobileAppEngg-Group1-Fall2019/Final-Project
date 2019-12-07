@@ -11,5 +11,7 @@ class UserModel(
     val photosBadge: Int,
     val greenThumbBadge: Int,
     val badgeOfBadges: Int,
-    val creationDate: Date
+    val creationDate: Date,
+    val lat: Double,
+    val long: Double
 )

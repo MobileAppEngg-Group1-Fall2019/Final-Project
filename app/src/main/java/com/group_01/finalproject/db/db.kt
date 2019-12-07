@@ -64,7 +64,8 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
         values.put(DBContract.UserEntry.GREEN_THUMB_BADGE, user.greenThumbBadge)
         values.put(DBContract.UserEntry.BADGE_OF_BADGES, user.badgeOfBadges)
         values.put(DBContract.UserEntry.CREATION_DATE, dateFormatter.format(user.creationDate))
-
+        values.put(DBContract.UserEntry.LAT, user.lat)
+        values.put(DBContract.UserEntry.LONG, user.long)
         // Insert the new row, returning the primary key value of the new row
         val newRowId = db.insert(DBContract.UserEntry.TABLE_NAME, null, values)
 
@@ -93,6 +94,8 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
         var greenThumbBadge: Int
         var badgeOfBadges: Int
         var creationDate: String
+        var lat: Double
+        var long: Double
 
         if (cursor!!.moveToFirst()) {
             while (cursor.isAfterLast == false) {
@@ -111,6 +114,10 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
                     cursor.getInt(cursor.getColumnIndex(DBContract.UserEntry.BADGE_OF_BADGES))
                 creationDate =
                     cursor.getString(cursor.getColumnIndex(DBContract.UserEntry.CREATION_DATE))
+                lat =
+                    cursor.getDouble(cursor.getColumnIndex(DBContract.UserEntry.LAT))
+                long =
+                    cursor.getDouble(cursor.getColumnIndex(DBContract.UserEntry.LONG))
                 users.add(
                     UserModel(
                         userId,
@@ -121,7 +128,9 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
                         photosBadge,
                         greenThumbBadge,
                         badgeOfBadges,
-                        dateFormatter.parse(creationDate)
+                        dateFormatter.parse(creationDate),
+                        lat,
+                        long
                     )
                 )
                 cursor.moveToNext()
@@ -131,7 +140,7 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
     }
 
     fun readAllUsers(): ArrayList<UserModel> {
-        val checkIns = ArrayList<UserModel>()
+        val users = ArrayList<UserModel>()
         val db = writableDatabase
         var cursor: Cursor? = null
         val query = "SELECT * FROM ${DBContract.UserEntry.TABLE_NAME}"
@@ -151,6 +160,8 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
         var greenThumbBadge: Int
         var badgeOfBadges: Int
         var creationDate: String
+        var lat: Double
+        var long: Double
 
         if (cursor!!.moveToFirst()) {
             while (cursor.isAfterLast == false) {
@@ -169,7 +180,11 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
                     cursor.getInt(cursor.getColumnIndex(DBContract.UserEntry.BADGE_OF_BADGES))
                 creationDate =
                     cursor.getString(cursor.getColumnIndex(DBContract.UserEntry.CREATION_DATE))
-                checkIns.add(
+                lat =
+                    cursor.getDouble(cursor.getColumnIndex(DBContract.UserEntry.LAT))
+                long =
+                    cursor.getDouble(cursor.getColumnIndex(DBContract.UserEntry.LONG))
+                users.add(
                     UserModel(
                         userId,
                         name,
@@ -179,13 +194,15 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
                         photosBadge,
                         greenThumbBadge,
                         badgeOfBadges,
-                        dateFormatter.parse(creationDate)
+                        dateFormatter.parse(creationDate),
+                        lat,
+                        long
                     )
                 )
                 cursor.moveToNext()
             }
         }
-        return checkIns
+        return users
     }
 
     @Throws(SQLiteConstraintException::class)
@@ -520,7 +537,7 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
 
     companion object {
         // If you change the database schema, you must increment the database version.
-        const val DATABASE_VERSION = 3
+        const val DATABASE_VERSION = 4
         const val DATABASE_NAME = "Plants.db"
 
         private const val SQL_CREATE_USER =
@@ -533,7 +550,9 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
                     "${DBContract.UserEntry.PHOTOS_BADGE} INTEGER," +
                     "${DBContract.UserEntry.GREEN_THUMB_BADGE} INTEGER," +
                     "${DBContract.UserEntry.BADGE_OF_BADGES} INTEGER," +
-                    "${DBContract.UserEntry.CREATION_DATE} TEXT)"
+                    "${DBContract.UserEntry.CREATION_DATE} TEXT," +
+                    "${DBContract.UserEntry.LAT} DOUBLE," +
+                    "${DBContract.UserEntry.LONG} DOUBLE)"
 
 
         private const val SQL_DELETE_USER =

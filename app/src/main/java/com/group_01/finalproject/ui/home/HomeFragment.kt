@@ -51,7 +51,9 @@ class HomeFragment : Fragment() {
             4,
             3,
             2,
-            Date(2018, 10, 1)
+            Date(2018, 10, 1),
+            12.123123,
+            13.12312312
         )
 
         val testCare = arrayListOf(

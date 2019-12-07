@@ -27,6 +27,7 @@ object DBContract {
             const val STATUS = "status"
             const val INDOOR = "indoor"
             const val AGE = "age"
+            const val LASTCARE = "lastcare"
         }
     }
 
@@ -37,6 +38,7 @@ object DBContract {
             const val PLANT_ID = "plantid"
             const val DATE = "date"
             const val CAPTION = "caption"
+            const val COMPLETED = "completed"
         }
     }
 

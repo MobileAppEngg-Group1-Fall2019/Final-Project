@@ -6,5 +6,6 @@ class PlantModel(
     val type: String,
     val status: String,
     val indoor: Boolean,
-    val age: Int
+    val age: Int,
+    val lastCare: Long
 )

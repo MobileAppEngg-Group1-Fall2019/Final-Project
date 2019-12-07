@@ -201,6 +201,7 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
         values.put(DBContract.PlantEntry.STATUS, plant.status)
         values.put(DBContract.PlantEntry.INDOOR, plant.indoor)
         values.put(DBContract.PlantEntry.AGE, plant.age)
+        values.put(DBContract.PlantEntry.LASTCARE, plant.lastCare)
 
 
         // Insert the new row, returning the primary key value of the new row
@@ -228,6 +229,7 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
         var status: String
         var indoor: Boolean
         var age: Int
+        var lastCare: Long
 
         if (cursor!!.moveToFirst()) {
             while (cursor.isAfterLast == false) {
@@ -237,7 +239,8 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
                 status = cursor.getString(cursor.getColumnIndex(DBContract.PlantEntry.STATUS))
                 indoor = cursor.getInt(cursor.getColumnIndex(DBContract.PlantEntry.INDOOR)) > 0
                 age = cursor.getInt(cursor.getColumnIndex(DBContract.PlantEntry.AGE))
-                plants.add(PlantModel(plantId, name, type, status, indoor, age))
+                lastCare = cursor.getLong(cursor.getColumnIndex(DBContract.PlantEntry.LASTCARE))
+                plants.add(PlantModel(plantId, name, type, status, indoor, age, lastCare))
                 cursor.moveToNext()
             }
         }
@@ -262,6 +265,7 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
         var status: String
         var indoor: Boolean
         var age: Int
+        var lastCare: Long
 
         if (cursor!!.moveToFirst()) {
             while (cursor.isAfterLast == false) {
@@ -271,7 +275,8 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
                 status = cursor.getString(cursor.getColumnIndex(DBContract.PlantEntry.STATUS))
                 indoor = cursor.getInt(cursor.getColumnIndex(DBContract.PlantEntry.INDOOR)) > 0
                 age = cursor.getInt(cursor.getColumnIndex(DBContract.PlantEntry.AGE))
-                plants.add(PlantModel(plantId, name, type, status, indoor, age))
+                lastCare = cursor.getLong(cursor.getColumnIndex(DBContract.PlantEntry.LASTCARE))
+                plants.add(PlantModel(plantId, name, type, status, indoor, age, lastCare))
                 cursor.moveToNext()
             }
         }
@@ -403,6 +408,7 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
         values.put(DBContract.CareEntry.DATE, dateFormatter.format(care.date))
         values.put(DBContract.CareEntry.CAPTION, care.caption)
         values.put(DBContract.CareEntry.PLANT_ID, care.plantID)
+        values.put(DBContract.CareEntry.COMPLETED, care.completed)
 
 
         // Insert the new row, returning the primary key value of the new row
@@ -428,6 +434,7 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
         var date: String
         var caption: String
         var plantId: Long
+        var completed: Boolean
 
         if (cursor!!.moveToFirst()) {
             while (cursor.isAfterLast == false) {
@@ -435,14 +442,15 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
                 date = cursor.getString(cursor.getColumnIndex(DBContract.CareEntry.DATE))
                 caption = cursor.getString(cursor.getColumnIndex(DBContract.CareEntry.CAPTION))
                 plantId = cursor.getLong(cursor.getColumnIndex(DBContract.CareEntry.PLANT_ID))
-                cares.add(CareModel(careId, plantId, dateFormatter.parse(date), caption))
+                completed = cursor.getInt(cursor.getColumnIndex(DBContract.CareEntry.COMPLETED)) > 0
+                cares.add(CareModel(careId, plantId, dateFormatter.parse(date), caption, completed))
                 cursor.moveToNext()
             }
         }
         return cares
     }
 
-    fun readAllCare(careId: Long): ArrayList<CareModel> {
+    fun readAllCare(): ArrayList<CareModel> {
         val cares = ArrayList<CareModel>()
         val db = writableDatabase
         var cursor: Cursor? = null
@@ -459,6 +467,7 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
         var date: String
         var caption: String
         var plantId: Long
+        var completed: Boolean
 
         if (cursor!!.moveToFirst()) {
             while (cursor.isAfterLast == false) {
@@ -466,7 +475,8 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
                 date = cursor.getString(cursor.getColumnIndex(DBContract.CareEntry.DATE))
                 caption = cursor.getString(cursor.getColumnIndex(DBContract.CareEntry.CAPTION))
                 plantId = cursor.getLong(cursor.getColumnIndex(DBContract.CareEntry.PLANT_ID))
-                cares.add(CareModel(careId, plantId, dateFormatter.parse(date), caption))
+                completed = cursor.getInt(cursor.getColumnIndex(DBContract.CareEntry.COMPLETED)) > 0
+                cares.add(CareModel(careId, plantId, dateFormatter.parse(date), caption, completed))
                 cursor.moveToNext()
             }
         }
@@ -490,6 +500,7 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
         var date: String
         var caption: String
         var plantId: Long
+        var completed: Boolean
 
         if (cursor!!.moveToFirst()) {
             while (cursor.isAfterLast == false) {
@@ -497,7 +508,8 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
                 date = cursor.getString(cursor.getColumnIndex(DBContract.CareEntry.DATE))
                 caption = cursor.getString(cursor.getColumnIndex(DBContract.CareEntry.CAPTION))
                 plantId = cursor.getLong(cursor.getColumnIndex(DBContract.CareEntry.PLANT_ID))
-                cares.add(CareModel(careId, plantId, dateFormatter.parse(date), caption))
+                completed = cursor.getInt(cursor.getColumnIndex(DBContract.CareEntry.COMPLETED)) > 0
+                cares.add(CareModel(careId, plantId, dateFormatter.parse(date), caption, completed))
                 cursor.moveToNext()
             }
         }
@@ -676,7 +688,9 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
                 "${DBContract.PlantEntry.TYPE} TEXT," +
                 "${DBContract.PlantEntry.STATUS} TEXT," +
                 "${DBContract.PlantEntry.INDOOR} INTEGER," +
-                "${DBContract.PlantEntry.AGE} INTEGER)"
+                "${DBContract.PlantEntry.AGE} INTEGER," +
+                "${DBContract.PlantEntry.LASTCARE} INTEGER," +
+                "FOREIGN KEY(${DBContract.PlantEntry.LASTCARE}) REFERENCES ${DBContract.CareEntry.TABLE_NAME}(${DBContract.CareEntry.CARE_ID}) ON DELETE CASCADE)"
 
         private const val SQL_DELETE_PLANT =
             "DROP TABLE IF EXISTS ${DBContract.PlantEntry.TABLE_NAME}"
@@ -697,6 +711,7 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
                 "${DBContract.CareEntry.DATE} TEXT," +
                 "${DBContract.CareEntry.CAPTION} TEXT," +
                 "${DBContract.CareEntry.PLANT_ID} INTEGER," +
+                "${DBContract.CareEntry.COMPLETED} INTEGER," +
                 "FOREIGN KEY(${DBContract.CareEntry.PLANT_ID}) REFERENCES ${DBContract.PlantEntry.TABLE_NAME}(${DBContract.PlantEntry.PLANT_ID}) ON DELETE CASCADE)"
 
         private const val SQL_DELETE_CARE =

@@ -45,6 +45,10 @@ class DBInterface(context: Context) {
         return dbHelper.readCare(careID).get(0)
     }
 
+    fun getAllCare(): ArrayList<CareModel> {
+        return dbHelper.readAllCare()
+    }
+
     fun getAllPlants(): ArrayList<PlantModel> {
         return dbHelper.readAllPlants()
     }

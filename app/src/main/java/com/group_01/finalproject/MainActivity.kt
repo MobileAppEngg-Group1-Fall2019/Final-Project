@@ -23,13 +23,6 @@ import com.kwabenaberko.openweathermaplib.models.currentweather.CurrentWeather
 import java.text.SimpleDateFormat
 import java.util.*
 
-
-
-
-
-
-
-
 class MainActivity : AppCompatActivity() {
 
     private lateinit var dbHelper: DBInterface
@@ -39,6 +32,7 @@ class MainActivity : AppCompatActivity() {
     private var latitude: Double = 0.0
     private val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_NETWORK_STATE)
 
+    val PERMISSIONS_LOCATION = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,29 +44,8 @@ class MainActivity : AppCompatActivity() {
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
 
-        // Get location upon opening app
-        val locManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-        val network_enabled = locManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-
-        val location: Location?
-
-        ActivityCompat.requestPermissions(this, permissions,0)
-
-        if (network_enabled && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NETWORK_STATE)
-            == PackageManager.PERMISSION_GRANTED) {
-
-            location = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-
-            if (location != null) {
-                longitude = location.longitude
-                latitude = location.latitude
-                Log.i("Location", "$longitude + $latitude")
-            }
-            Log.i("Location", "BAAAAD")
-        }
+        ActivityCompat.requestPermissions(this, permissions,PERMISSIONS_LOCATION)
 
         helper.getCurrentWeatherByCityName("Accra", object : CurrentWeatherCallback {
             override fun onSuccess(currentWeather: CurrentWeather) {
@@ -127,5 +100,51 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+    }
+
+    fun getCurrentLocation(locManager: LocationManager, network_enabled: Boolean) {
+        val location: Location?
+
+        if (network_enabled && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+            == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+            == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NETWORK_STATE)
+            == PackageManager.PERMISSION_GRANTED) {
+
+            location = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+
+            if (location != null) {
+                longitude = location.longitude
+                latitude = location.latitude
+                Log.i("Location", "$longitude + $latitude")
+            }
+            Log.i("Location", "BAAAAD")
+        }
+    }
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<String>, grantResults: IntArray) {
+        when (requestCode) {
+            PERMISSIONS_LOCATION -> {
+                // If request is cancelled, the result arrays are empty.
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                    // Get location upon opening app
+                    val locManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+                    val network_enabled = locManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+                    getCurrentLocation(locManager, network_enabled)
+
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return
+            }
+
+            // Add other 'when' lines to check for other
+            // permissions this app might request.
+            else -> {
+                // Ignore all other requests.
+            }
+        }
     }
 }

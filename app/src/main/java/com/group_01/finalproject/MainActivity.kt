@@ -36,7 +36,6 @@ class MainActivity : AppCompatActivity() {
         /* Instantiate db and anything related */
         // dateFormatter.setTimeZone(timeZone)
         dbHelper = DBInterface(this)
-        val idTwo = dbHelper.insertPlant(PlantModel(1, "planty", "tomato", "livin", true, 5, 0))
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
 

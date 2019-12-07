@@ -520,7 +520,7 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
 
     companion object {
         // If you change the database schema, you must increment the database version.
-        const val DATABASE_VERSION = 2
+        const val DATABASE_VERSION = 3
         const val DATABASE_NAME = "Plants.db"
 
         private const val SQL_CREATE_USER =
@@ -546,9 +546,7 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
                 "${DBContract.PlantEntry.STATUS} TEXT," +
                 "${DBContract.PlantEntry.INDOOR} INTEGER," +
                 "${DBContract.PlantEntry.AGE} INTEGER," +
-                "${DBContract.PlantEntry.LASTCARE} INTEGER," +
-                "FOREIGN KEY(${DBContract.PlantEntry.LASTCARE}) REFERENCES ${DBContract.CareEntry.TABLE_NAME}(${DBContract.CareEntry.CARE_ID}) ON DELETE CASCADE)"
-
+                "${DBContract.PlantEntry.LASTCARE} TEXT)"
         private const val SQL_DELETE_PLANT =
             "DROP TABLE IF EXISTS ${DBContract.PlantEntry.TABLE_NAME}"
 

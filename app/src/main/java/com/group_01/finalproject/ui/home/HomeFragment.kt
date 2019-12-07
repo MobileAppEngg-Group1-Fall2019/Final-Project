@@ -43,7 +43,7 @@ class HomeFragment : Fragment() {
         dbHelper = DBInterface(context = this.context!!)
 
         val testUser = UserModel(
-            0,
+            1,
             "test_user",
             50123,
             2,
@@ -55,30 +55,33 @@ class HomeFragment : Fragment() {
         )
 
         val testCare = arrayListOf(
-            CareModel(0,0,Date(2019,8,7),"Caption",true),
-            CareModel(1,0,Date(2019,19,7),"Caption",false),
-            CareModel(2,0,Date(2019,10,7),"Caption",true),
-            CareModel(3,0,Date(2019,11,7),"Caption",true)
+            CareModel(1, 1,Date(2019,8,7),"Caption",true),
+            CareModel(2,1,Date(2019,19,7),"Caption",false),
+            CareModel(3,1,Date(2019,10,7),"Caption",true),
+            CareModel(4,1,Date(2019,11,7),"Caption",true)
         )
-
+        val currentTime: Date = Calendar.getInstance().getTime();
         val testPlant = PlantModel(
-            0,
+            1,
             "Bob",
             "Cactus",
             "Alive",
             true,
             1,
-            3
+            currentTime
         )
 
         dbHelper.insertUser(testUser)
+
+        dbHelper.insertPlant(testPlant)
+
         testCare.forEach {
             dbHelper.insertCare(it)
         }
-        dbHelper.insertPlant(testPlant)
+
 
         // Get User & Care data from database
-        mUser = dbHelper.getUser(0)
+        mUser = dbHelper.getUser(1)
         mCare = dbHelper.getAllCare()
 
         createText(); createBadges(); createHistory()

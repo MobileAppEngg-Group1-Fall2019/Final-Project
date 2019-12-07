@@ -20,11 +20,11 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/value_total_points4"
+        android:id="@+id/value_start_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0"
-        android:fontFamily="monospace"
+        android:fontFamily="sans-serif-condensed-medium"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
         android:text="Gardening Since Date!"

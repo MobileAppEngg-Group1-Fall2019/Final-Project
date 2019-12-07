@@ -1,5 +1,7 @@
 package com.group_01.finalproject.db
 
+import java.util.*
+
 class PlantModel(
     val plantId: Long,
     val name: String,
@@ -7,5 +9,5 @@ class PlantModel(
     val status: String,
     val indoor: Boolean,
     val age: Int,
-    val lastCare: Long
+    val lastCare: Date
 )

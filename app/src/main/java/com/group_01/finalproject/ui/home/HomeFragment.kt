@@ -42,40 +42,40 @@ class HomeFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         dbHelper = DBInterface(context = this.context!!)
 
-//        val testUser = UserModel(
-//            0,
-//            "test_user",
-//            50123,
-//            2,
-//            3,
-//            4,
-//            3,
-//            2,
-//            Date(2018, 10, 1)
-//        )
-//
-//        val testCare = arrayListOf(
-//            CareModel(0,0,Date(2019,8,7),"Caption",true),
-//            CareModel(1,0,Date(2019,19,7),"Caption",false),
-//            CareModel(2,0,Date(2019,10,7),"Caption",true),
-//            CareModel(3,0,Date(2019,11,7),"Caption",true)
-//        )
-//
-//        val testPlant = PlantModel(
-//            0,
-//            "Bob",
-//            "Cactus",
-//            "Alive",
-//            true,
-//            1,
-//            3
-//        )
+        val testUser = UserModel(
+            0,
+            "test_user",
+            50123,
+            2,
+            3,
+            4,
+            3,
+            2,
+            Date(2018, 10, 1)
+        )
 
-//        dbHelper.insertUser(testUser)
-//        testCare.forEach {
-//            dbHelper.insertCare(it)
-//        }
-//        dbHelper.insertPlant(testPlant)
+        val testCare = arrayListOf(
+            CareModel(0,0,Date(2019,8,7),"Caption",true),
+            CareModel(1,0,Date(2019,19,7),"Caption",false),
+            CareModel(2,0,Date(2019,10,7),"Caption",true),
+            CareModel(3,0,Date(2019,11,7),"Caption",true)
+        )
+
+        val testPlant = PlantModel(
+            0,
+            "Bob",
+            "Cactus",
+            "Alive",
+            true,
+            1,
+            3
+        )
+
+        dbHelper.insertUser(testUser)
+        testCare.forEach {
+            dbHelper.insertCare(it)
+        }
+        dbHelper.insertPlant(testPlant)
 
         // Get User & Care data from database
         mUser = dbHelper.getUser(0)

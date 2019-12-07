@@ -201,7 +201,7 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
         values.put(DBContract.PlantEntry.STATUS, plant.status)
         values.put(DBContract.PlantEntry.INDOOR, plant.indoor)
         values.put(DBContract.PlantEntry.AGE, plant.age)
-        values.put(DBContract.PlantEntry.LASTCARE, plant.lastCare)
+        values.put(DBContract.PlantEntry.LASTCARE, dateFormatter.format(plant.lastCare))
 
 
         // Insert the new row, returning the primary key value of the new row
@@ -229,7 +229,7 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
         var status: String
         var indoor: Boolean
         var age: Int
-        var lastCare: Long
+        var lastCare: String
 
         if (cursor!!.moveToFirst()) {
             while (cursor.isAfterLast == false) {
@@ -239,8 +239,8 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
                 status = cursor.getString(cursor.getColumnIndex(DBContract.PlantEntry.STATUS))
                 indoor = cursor.getInt(cursor.getColumnIndex(DBContract.PlantEntry.INDOOR)) > 0
                 age = cursor.getInt(cursor.getColumnIndex(DBContract.PlantEntry.AGE))
-                lastCare = cursor.getLong(cursor.getColumnIndex(DBContract.PlantEntry.LASTCARE))
-                plants.add(PlantModel(plantId, name, type, status, indoor, age, lastCare))
+                lastCare = cursor.getString(cursor.getColumnIndex(DBContract.PlantEntry.LASTCARE))
+                plants.add(PlantModel(plantId, name, type, status, indoor, age, dateFormatter.parse(lastCare)))
                 cursor.moveToNext()
             }
         }
@@ -265,7 +265,7 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
         var status: String
         var indoor: Boolean
         var age: Int
-        var lastCare: Long
+        var lastCare: String
 
         if (cursor!!.moveToFirst()) {
             while (cursor.isAfterLast == false) {
@@ -275,8 +275,8 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
                 status = cursor.getString(cursor.getColumnIndex(DBContract.PlantEntry.STATUS))
                 indoor = cursor.getInt(cursor.getColumnIndex(DBContract.PlantEntry.INDOOR)) > 0
                 age = cursor.getInt(cursor.getColumnIndex(DBContract.PlantEntry.AGE))
-                lastCare = cursor.getLong(cursor.getColumnIndex(DBContract.PlantEntry.LASTCARE))
-                plants.add(PlantModel(plantId, name, type, status, indoor, age, lastCare))
+                lastCare = cursor.getString(cursor.getColumnIndex(DBContract.PlantEntry.LASTCARE))
+                plants.add(PlantModel(plantId, name, type, status, indoor, age, dateFormatter.parse(lastCare)))
                 cursor.moveToNext()
             }
         }

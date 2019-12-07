@@ -16,6 +16,9 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 import android.os.StrictMode
+import com.kwabenaberko.openweathermaplib.implementation.OpenWeatherMapHelper
+
+
 
 
 
@@ -29,11 +32,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        val helper = OpenWeatherMapHelper(getString(R.string.OPEN_WEATHER_MAP_API_KEY))
         /* Instantiate db and anything related */
         // dateFormatter.setTimeZone(timeZone)
         dbHelper = DBInterface(this)
-
+        val idTwo = dbHelper.insertPlant(PlantModel(1, "planty", "tomato", "livin", true, 5, 0))
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
 

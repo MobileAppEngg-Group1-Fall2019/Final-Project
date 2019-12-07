@@ -6,4 +6,5 @@
     <string name="subtitle_badges">Your Badges</string>
     <string name="subtitle_points">Total Points</string>
     <string name="subtitle_history">Plant Care History</string>
+    <string name="OPEN_WEATHER_MAP_API_KEY">956fc90708ef1ae3e63d2495096ceef9</string>
 </resources>

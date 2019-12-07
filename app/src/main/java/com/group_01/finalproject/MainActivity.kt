@@ -36,9 +36,9 @@ class MainActivity : AppCompatActivity() {
 
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
-        /*
 
-        Basic db tests - left them in for reference for now
+        /*
+        //Basic db tests - left them in for reference for now
         var imageSample: Bitmap = DbBitmapUtil.imageURLToBitmap("https://picsum.photos/200/300")
 
         var imageView: ImageView = findViewById<ImageView>(R.id.imageView)
@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
         val image: ImageModel = dbHelper.getImage(idThree)
         Log.d("#### DB Test", "" + image.lastModified)
        imageView.setImageBitmap(DbBitmapUtil.getImage(image.data))
-      */
+        */
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
 

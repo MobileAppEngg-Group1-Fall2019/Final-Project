@@ -26,6 +26,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.provider.FontsContractCompat.FontRequestCallback.RESULT_OK
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_dashboard.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -111,6 +112,8 @@ class NotificationsFragment : Fragment() {
                         plantPics
                     )
                     gridView.adapter = adapterForPhotos
+
+
                 }
                 else{
                     plantPics = dbHelper.getAllImages()
@@ -120,6 +123,8 @@ class NotificationsFragment : Fragment() {
                         plantPics
                     )
                     gridView.adapter = adapterForPhotos
+
+                    selectedPlantID = -1
                 }
             }
 
@@ -130,21 +135,26 @@ class NotificationsFragment : Fragment() {
 
             Log.d("Manishtesting","pressed the add image button")
 
-            val photoPickerIntent = Intent(Intent.ACTION_PICK)
-            photoPickerIntent.type = "image/*"
+            if(selectedPlantID >= 0) {
 
-            val permission = ContextCompat.checkSelfPermission(context!!,Manifest.permission.READ_EXTERNAL_STORAGE)
+                val photoPickerIntent = Intent(Intent.ACTION_PICK)
+                photoPickerIntent.type = "image/*"
 
-            if(permission == PackageManager.PERMISSION_GRANTED) {
-                startActivityForResult(photoPickerIntent, SELECT_PHOTO)
-            }
-            else{
-                ActivityCompat.requestPermissions(
-                    this.activity!!,
-                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                    SELECT_PHOTO
+                val permission = ContextCompat.checkSelfPermission(
+                    context!!,
+                    Manifest.permission.READ_EXTERNAL_STORAGE
                 )
-                startActivityForResult(photoPickerIntent, SELECT_PHOTO)
+
+                if (permission == PackageManager.PERMISSION_GRANTED) {
+                    startActivityForResult(photoPickerIntent, SELECT_PHOTO)
+                } else {
+                    ActivityCompat.requestPermissions(
+                        this.activity!!,
+                        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                        SELECT_PHOTO
+                    )
+                    startActivityForResult(photoPickerIntent, SELECT_PHOTO)
+                }
             }
 
 

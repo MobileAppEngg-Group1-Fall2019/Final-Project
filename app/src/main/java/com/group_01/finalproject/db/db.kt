@@ -372,7 +372,7 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
         val db = writableDatabase
         var cursor: Cursor? = null
         val query =
-            "SELECT * FROM ${DBContract.ImageEntry.TABLE_NAME}_ID}"
+            "SELECT * FROM ${DBContract.ImageEntry.TABLE_NAME}"
 
         try {
             cursor = db.rawQuery(query, null)

@@ -17,6 +17,12 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 import android.os.StrictMode
 import com.kwabenaberko.openweathermaplib.implementation.OpenWeatherMapHelper
+import com.kwabenaberko.openweathermaplib.constants.Lang
+import com.kwabenaberko.openweathermaplib.constants.Units
+import com.kwabenaberko.openweathermaplib.models.currentweather.CurrentWeather
+import com.kwabenaberko.openweathermaplib.implementation.callbacks.CurrentWeatherCallback
+
+
 
 
 
@@ -33,11 +39,30 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val helper = OpenWeatherMapHelper(getString(R.string.OPEN_WEATHER_MAP_API_KEY))
+        helper.setLang(Lang.ENGLISH)
+        helper.setUnits(Units.IMPERIAL)
         /* Instantiate db and anything related */
         // dateFormatter.setTimeZone(timeZone)
         dbHelper = DBInterface(this)
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
+
+        helper.getCurrentWeatherByCityName("Accra", object : CurrentWeatherCallback {
+            override fun onSuccess(currentWeather: CurrentWeather) {
+                Log.v(
+                    "#### API Test",
+                    "Coordinates: " + currentWeather.coord.lat + ", " + currentWeather.coord.lon + "\n"
+                            + "Weather Description: " + currentWeather.weather[0].description + "\n"
+                            + "Temperature: " + currentWeather.main.tempMax + "\n"
+                            + "Wind Speed: " + currentWeather.wind.speed + "\n"
+                            + "City, Country: " + currentWeather.name + ", " + currentWeather.sys.country
+                )
+            }
+
+            override fun onFailure(throwable: Throwable) {
+                Log.v("#### API Test", throwable.message)
+            }
+        })
 
         /*
         //Basic db tests - left them in for reference for now

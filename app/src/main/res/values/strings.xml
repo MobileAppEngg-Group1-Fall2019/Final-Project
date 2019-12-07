@@ -2,7 +2,7 @@
     <string name="app_name">Group 01 Final Project</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_notifications">Gallery</string>
     <string name="subtitle_badges">Your Badges</string>
     <string name="subtitle_points">Total Points</string>
     <string name="subtitle_history">Plant Care History</string>

@@ -70,7 +70,7 @@ class NotificationsFragment : Fragment() {
         for (plant in plants){
             plantNames.add(plant.name)
         }
-        //plantNames.add("*")
+        plantNames.add("View All Photos!")
         Log.d("Manish testing",plantNames.toString())
 
         val adapterForSpinner = ArrayAdapter(this.context,android.R.layout.simple_spinner_item, plantNames)
@@ -93,16 +93,34 @@ class NotificationsFragment : Fragment() {
                 position: Int,
                 id: Long
             ) {
-                Log.d("Manishtesting", "plant id is " + plants[position].plantId.toString())
-                Log.d("Manishtesting","plant name is " + spinnerPlantNames.selectedItem.toString())
-                Log.d("Manishtesting", "whatever this id is is " + id.toString())
+                if (plantNames[position] != "View All Photos!") {
+                    Log.d("Manishtesting", "plant id is " + plants[position].plantId.toString())
+                    Log.d(
+                        "Manishtesting",
+                        "plant name is " + spinnerPlantNames.selectedItem.toString()
+                    )
+                    Log.d("Manishtesting", "whatever this id is is " + id.toString())
 
-                selectedPlantID = plants[position].plantId
+                    selectedPlantID = plants[position].plantId
 
-                plantPics = dbHelper.getPlantImages(selectedPlantID)
+                    plantPics = dbHelper.getPlantImages(selectedPlantID)
 
-                val adapterForPhotos = PhotoAdapter(context!!, com.group_01.finalproject.R.layout.photo_grid_element, plantPics)
-                gridView.adapter = adapterForPhotos
+                    val adapterForPhotos = PhotoAdapter(
+                        context!!,
+                        com.group_01.finalproject.R.layout.photo_grid_element,
+                        plantPics
+                    )
+                    gridView.adapter = adapterForPhotos
+                }
+                else{
+                    plantPics = dbHelper.getAllImages()
+                    val adapterForPhotos = PhotoAdapter(
+                        context!!,
+                        com.group_01.finalproject.R.layout.photo_grid_element,
+                        plantPics
+                    )
+                    gridView.adapter = adapterForPhotos
+                }
             }
 
         }

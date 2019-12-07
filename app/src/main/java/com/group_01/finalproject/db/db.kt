@@ -362,6 +362,37 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
         return images
     }
 
+    fun readAllImages(): ArrayList<ImageModel> {
+        val images = ArrayList<ImageModel>()
+        val db = writableDatabase
+        var cursor: Cursor? = null
+        val query =
+            "SELECT * FROM ${DBContract.ImageEntry.TABLE_NAME}_ID}"
+
+        try {
+            cursor = db.rawQuery(query, null)
+        } catch (e: SQLiteException) {
+            db.execSQL(SQL_CREATE_IMAGE)
+            return ArrayList()
+        }
+        var imageId: Long
+        var data: ByteArray
+        var lastModified: String
+        var plantId: Long
+
+        if (cursor!!.moveToFirst()) {
+            while (cursor.isAfterLast == false) {
+                imageId = cursor.getLong(cursor.getColumnIndex(DBContract.ImageEntry.IMAGE_ID))
+                data = cursor.getBlob(cursor.getColumnIndex(DBContract.ImageEntry.DATA))
+                lastModified = cursor.getString(cursor.getColumnIndex(DBContract.ImageEntry.LAST_MODIFIED))
+                plantId = cursor.getLong(cursor.getColumnIndex(DBContract.ImageEntry.PLANT_ID))
+                images.add(ImageModel(imageId,plantId, data, dateFormatter.parse(lastModified)))
+                cursor.moveToNext()
+            }
+        }
+        return images
+    }
+
     fun insertCare(care: CareModel): Long {
         // Gets the data repository in write mode
         val db = writableDatabase

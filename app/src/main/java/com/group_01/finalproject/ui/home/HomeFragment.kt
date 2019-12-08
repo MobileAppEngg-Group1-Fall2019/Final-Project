@@ -15,7 +15,6 @@ import com.group_01.finalproject.db.PlantModel
 import com.group_01.finalproject.db.UserModel
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.history_card.view.*
-import kotlinx.android.synthetic.main.list_item.*
 import java.util.*
 
 @Suppress("DEPRECATION")
@@ -82,7 +81,6 @@ class HomeFragment : Fragment() {
         testCare.forEach {
             dbHelper.insertCare(it)
         }
-
 
         // Get User & Care data from database
         mUser = dbHelper.getUser(1)

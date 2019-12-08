@@ -44,25 +44,7 @@ class HomeFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         dbHelper = DBInterface(context = this.context!!)
 
-        if (dbHelper.getAllUsers().size == 0) { // Creates the initial user.
-            val currentTime: Date = Calendar.getInstance().time
-            val initUser = UserModel(
-                1,
-                "user_name",
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                Date(currentTime.year, currentTime.month, currentTime.day),
-                12.123123,
-                13.12312312
-            )
-            dbHelper.insertUser(initUser) // Insert User into database.
-        }
-
-        // TODO :- vvvvv TEST ONLY vvvvv
+        // TODO :- vvvvv TEST ONLY, REMOVE FOR FINAL BUILD vvvvv
         val currentTime: Date = Calendar.getInstance().time
 
         val testCare = arrayListOf(
@@ -80,14 +62,32 @@ class HomeFragment : Fragment() {
             1,
             currentTime
         )
+        // TODO :- ^^^^^ TEST ONLY, REMOVE FOR FINAL BUILD ^^^^^
 
-        if (dbHelper.getAllUsers().size == 1) {
+        if (dbHelper.getAllUsers().size == 0) { // Creates the initial user.
+            val currentTime: Date = Calendar.getInstance().time
+            val initUser = UserModel(
+                1,
+                "user_name",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                Date(currentTime.year, currentTime.month, currentTime.day),
+                12.123123,
+                13.12312312
+            )
+            dbHelper.insertUser(initUser) // Insert User into database.
+
+            // TODO :- vvvvv TEST ONLY, REMOVE FOR FINAL BUILD vvvvv
             dbHelper.insertPlant(testPlant)
             testCare.forEach {
                 dbHelper.insertCare(it)
             }
+            // TODO :- ^^^^^ TEST ONLY, REMOVE FOR FINAL BUILD ^^^^^
         }
-        // TODO :- ^^^^^ TEST ONLY ^^^^^
 
         // Get User & Care data from database
         mUser = dbHelper.getUser(1) // Only one User per device.

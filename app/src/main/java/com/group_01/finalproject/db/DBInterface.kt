@@ -37,12 +37,16 @@ class DBInterface(context: Context) {
         return dbHelper.readImage(imageID).get(0)
     }
 
-    fun getAllImages(): ArrayList<ImageModel> {
-        return dbHelper.readAllImages()
+    fun getPlantImages(plantID: Long): ArrayList<ImageModel> {
+        return dbHelper.readPlantImages(plantID)
     }
 
     fun getCare(careID: Long): CareModel {
         return dbHelper.readCare(careID).get(0)
+    }
+
+    fun getAllUsers(): ArrayList<UserModel> {
+        return dbHelper.readAllUsers()
     }
 
     fun getAllCare(): ArrayList<CareModel> {
@@ -53,7 +57,7 @@ class DBInterface(context: Context) {
         return dbHelper.readAllPlants()
     }
 
-    fun getPlantImages(plantID: Long): ArrayList<ImageModel> {
-        return dbHelper.readPlantImages(plantID)
+    fun getAllImages(): ArrayList<ImageModel> {
+        return dbHelper.readAllImages()
     }
 }

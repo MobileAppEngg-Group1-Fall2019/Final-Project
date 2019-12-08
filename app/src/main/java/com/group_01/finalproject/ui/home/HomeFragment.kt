@@ -1,5 +1,6 @@
 package com.group_01.finalproject.ui.home
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -43,27 +44,33 @@ class HomeFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         dbHelper = DBInterface(context = this.context!!)
 
-        val testUser = UserModel(
-            1,
-            "test_user",
-            50123,
-            2,
-            3,
-            4,
-            3,
-            2,
-            Date(2018, 10, 1),
-            12.123123,
-            13.12312312
-        )
+        if (dbHelper.getAllUsers().size == 0) { // Creates the initial user.
+            val currentTime: Date = Calendar.getInstance().time
+            val initUser = UserModel(
+                1,
+                "user_name",
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                Date(currentTime.year, currentTime.month, currentTime.day),
+                12.123123,
+                13.12312312
+            )
+            dbHelper.insertUser(initUser) // Insert User into database.
+        }
+
+        // TODO :- vvvvv TEST ONLY vvvvv
+        val currentTime: Date = Calendar.getInstance().time
 
         val testCare = arrayListOf(
-            CareModel(1,1,Date(2019,8,7),"Caption",true),
-            CareModel(2,1,Date(2019,9,7),"Caption",false),
-            CareModel(3,1,Date(2019,10,7),"Caption",true),
-            CareModel(4,1,Date(2019,11,7),"Caption",true)
+            CareModel(1, 1, Date(2019, 8, 7), "Caption", true),
+            CareModel(2, 1, Date(2019, 9, 7), "Caption", false),
+            CareModel(3, 1, Date(2019, 10, 7), "Caption", true),
+            CareModel(4, 1, Date(2019, 11, 7), "Caption", true)
         )
-        val currentTime: Date = Calendar.getInstance().getTime()
         val testPlant = PlantModel(
             1,
             "Bob",
@@ -74,22 +81,24 @@ class HomeFragment : Fragment() {
             currentTime
         )
 
-        dbHelper.insertUser(testUser)
-
-        dbHelper.insertPlant(testPlant)
-
-        testCare.forEach {
-            dbHelper.insertCare(it)
+        if (dbHelper.getAllUsers().size == 1) {
+            dbHelper.insertPlant(testPlant)
+            testCare.forEach {
+                dbHelper.insertCare(it)
+            }
         }
+        // TODO :- ^^^^^ TEST ONLY ^^^^^
 
         // Get User & Care data from database
-        mUser = dbHelper.getUser(1)
+        mUser = dbHelper.getUser(1) // Only one User per device.
         mCare = dbHelper.getAllCare()
 
+        // Call methods to create fragment elements.
         createText(); createBadges(); createHistory()
     }
 
     // Set TextViews for total points & start date.
+    @SuppressLint("SetTextI18n")
     private fun createText() {
         val points = mUser?.points.toString()
         val year = mUser?.creationDate?.year
@@ -102,38 +111,38 @@ class HomeFragment : Fragment() {
         value_start_date.text = "Gardening Since $stringMonth $day, $year!"
     }
 
-    // Create and add image view of badges to badges_layout using user db data.
+    // Create and add image view of badges to badges_layout using User db data.
     private fun createBadges() {
         when (mUser?.consistencyBadge) { // CONSISTENCY BADGE  // Range: 0-5
-            1 -> addBadge(badgesConsistency,0)
-            2 -> for (i in 0..1) { addBadge(badgesConsistency,i) }
-            3 -> for (i in 0..2) { addBadge(badgesConsistency,i) }
-            4 -> for (i in 0..3) { addBadge(badgesConsistency,i) }
-            5 -> for (i in 0..4) { addBadge(badgesConsistency,i) }
+            1 -> addBadge(badgesConsistency, 0)
+            2 -> for (i in 0..1) { addBadge(badgesConsistency, i) }
+            3 -> for (i in 0..2) { addBadge(badgesConsistency, i) }
+            4 -> for (i in 0..3) { addBadge(badgesConsistency, i) }
+            5 -> for (i in 0..4) { addBadge(badgesConsistency, i) }
         }
-        when (mUser?.diversityBadge) { // DIVERSITY BADGE   //Range: 0-6
-            1 -> addBadge(badgesDiversity,0)
-            2 -> for (i in 0..1) { addBadge(badgesDiversity,i) }
-            3 -> for (i in 0..2) { addBadge(badgesDiversity,i) }
-            4 -> for (i in 0..3) { addBadge(badgesDiversity,i) }
-            5 -> for (i in 0..4) { addBadge(badgesDiversity,i) }
-            6 -> for (i in 0..5) { addBadge(badgesDiversity,i) }
+        when (mUser?.diversityBadge) { // DIVERSITY BADGE   // Range: 0-6
+            1 -> addBadge(badgesDiversity, 0)
+            2 -> for (i in 0..1) { addBadge(badgesDiversity, i) }
+            3 -> for (i in 0..2) { addBadge(badgesDiversity, i) }
+            4 -> for (i in 0..3) { addBadge(badgesDiversity, i) }
+            5 -> for (i in 0..4) { addBadge(badgesDiversity, i) }
+            6 -> for (i in 0..5) { addBadge(badgesDiversity, i) }
         }
-        when (mUser?.photosBadge) { // PHOTOGRAPHER BADGE   //Range: 0-5
-            1 -> addBadge(badgesPhotos,0)
-            2 -> for (i in 0..1) { addBadge(badgesPhotos,i) }
-            3 -> for (i in 0..2) { addBadge(badgesPhotos,i) }
-            4 -> for (i in 0..3) { addBadge(badgesPhotos,i) }
-            5 -> for (i in 0..4) { addBadge(badgesPhotos,i) }
+        when (mUser?.photosBadge) { // PHOTOGRAPHER BADGE   // Range: 0-5
+            1 -> addBadge(badgesPhotos, 0)
+            2 -> for (i in 0..1) { addBadge(badgesPhotos, i) }
+            3 -> for (i in 0..2) { addBadge(badgesPhotos, i) }
+            4 -> for (i in 0..3) { addBadge(badgesPhotos, i) }
+            5 -> for (i in 0..4) { addBadge(badgesPhotos, i) }
         }
-        when (mUser?.greenThumbBadge) { // GREEN THUMB BADGE   //Range: 0-5
-            1 -> addBadge(badgesGreenThumb,0)
-            2 -> for (i in 0..1) { addBadge(badgesGreenThumb,i) }
-            3 -> for (i in 0..2) { addBadge(badgesGreenThumb,i) }
-            4 -> for (i in 0..3) { addBadge(badgesGreenThumb,i) }
-            5 -> for (i in 0..4) { addBadge(badgesGreenThumb,i) }
+        when (mUser?.greenThumbBadge) { // GREEN THUMB BADGE   // Range: 0-5
+            1 -> addBadge(badgesGreenThumb, 0)
+            2 -> for (i in 0..1) { addBadge(badgesGreenThumb, i) }
+            3 -> for (i in 0..2) { addBadge(badgesGreenThumb, i) }
+            4 -> for (i in 0..3) { addBadge(badgesGreenThumb, i) }
+            5 -> for (i in 0..4) { addBadge(badgesGreenThumb, i) }
         }
-        when (mUser?.badgeOfBadges) { // BADGE OF BADGES   //Range: 0-3
+        when (mUser?.badgeOfBadges) { // BADGE OF BADGES   // Range: 0-3
             1 -> addBadge(badgesOfBadges, 0)
             2 -> for (i in 0..1) { addBadge(badgesOfBadges, i) }
             3 -> for (i in 0..2) { addBadge(badgesOfBadges, i) }
@@ -141,6 +150,7 @@ class HomeFragment : Fragment() {
     }
 
     // Create and add cards to display care history.
+    @SuppressLint("SetTextI18n")
     private fun createHistory() {
         mCare?.forEach {
             val layoutInflater = LayoutInflater.from(context)
@@ -149,28 +159,34 @@ class HomeFragment : Fragment() {
             val month = monthToString(it.date.month)
             val day = it.date.day
 
-            val card: View = layoutInflater.inflate(
+            val card: View = layoutInflater.inflate( // Inflate History Card Layout.
                 R.layout.history_card,
                 history_cards_layout,
                 false
             )
 
+            // Set TextViews for History Card.
             card.card_name.text = plant.name
             card.card_type.text = plant.type
             card.card_date.text = "$month $day, $year"
-            card.card_bool.text = if(it.completed) "Yes" else "No" // This is ugly but deal with it!
+
+            // This is ugly but deal with it!
+            card.card_bool.text = if (it.completed) "Watered: Yes" else "Watered: No"
 
             history_cards_layout.addView(card)
         }
     }
 
+    // Adds Badge w/ OnClickListener for pop-up.
     private fun addBadge(type: List<Int>, index: Int) {
         val mImageView = ImageView(context)
         var titleString = ""
         var descString = ""
         mImageView.setImageResource(type[index])
 
-        when(type) {
+        // Sets the title and description for pop-up.
+        // To edit description strings, go to: 'res/values/strings.xml'
+        when (type) {
             badgesConsistency -> {
                 when (index) {
                     0 -> {
@@ -185,17 +201,17 @@ class HomeFragment : Fragment() {
                         titleString = "Consistency Badge 100"
                         descString = getString(R.string.badge_consistency_100)
                     }
-                    3 ->  {
+                    3 -> {
                         titleString = "Consistency Badge 1000"
                         descString = getString(R.string.badge_consistency_1000)
                     }
-                    4 ->  {
+                    4 -> {
                         titleString = "Consistency Badge 10000"
                         descString = getString(R.string.badge_consistency_10000)
                     }
                 }
             }
-            badgesDiversity ->  {
+            badgesDiversity -> {
                 when (index) {
                     0 -> {
                         titleString = "Diversity Badge 2"
@@ -209,21 +225,21 @@ class HomeFragment : Fragment() {
                         titleString = "Diversity Badge 6"
                         descString = getString(R.string.badge_diversity_6)
                     }
-                    3 ->  {
+                    3 -> {
                         titleString = "Diversity Badge 8"
                         descString = getString(R.string.badge_diversity_8)
                     }
-                    4 ->  {
+                    4 -> {
                         titleString = "Diversity Badge 10"
                         descString = getString(R.string.badge_diversity_10)
                     }
-                    5 ->  {
+                    5 -> {
                         titleString = "Diversity Badge 12"
                         descString = getString(R.string.badge_diversity_12)
                     }
                 }
             }
-            badgesPhotos ->  {
+            badgesPhotos -> {
                 when (index) {
                     0 -> {
                         titleString = "Photographer Badge 1"
@@ -237,17 +253,17 @@ class HomeFragment : Fragment() {
                         titleString = "Photographer Badge 100"
                         descString = getString(R.string.badge_photography_100)
                     }
-                    3 ->  {
+                    3 -> {
                         titleString = "Photographer Badge 1000"
                         descString = getString(R.string.badge_photography_1000)
                     }
-                    4 ->  {
+                    4 -> {
                         titleString = "Photographer Badge 10000"
                         descString = getString(R.string.badge_photography_10000)
                     }
                 }
             }
-            badgesGreenThumb ->  {
+            badgesGreenThumb -> {
                 when (index) {
                     0 -> {
                         titleString = "Green Thumb Badge 1"
@@ -261,11 +277,11 @@ class HomeFragment : Fragment() {
                         titleString = "Green Thumb Badge 100"
                         descString = getString(R.string.badge_greenThumb_100)
                     }
-                    3 ->  {
+                    3 -> {
                         titleString = "Green Thumb Badge 1000"
                         descString = getString(R.string.badge_greenThumb_1000)
                     }
-                    4 ->  {
+                    4 -> {
                         titleString = "Green Thumb Badge 10000"
                         descString = getString(R.string.badge_greenThumb_10000)
                     }
@@ -289,21 +305,23 @@ class HomeFragment : Fragment() {
             }
         }
 
-        mImageView.setOnClickListener { // Creates a pop-up when user presses on badge.
+        // Creates a pop-up when user presses on badge.
+        mImageView.setOnClickListener {
             val alert: AlertDialog.Builder = AlertDialog.Builder(context)
             val mImageView2 = ImageView(context)
             mImageView2.setImageResource(type[index])
 
-            alert.setTitle(titleString)
+            alert.setTitle(titleString) // Alert type pop-up.
                 .setView(mImageView2)
                 .setMessage(descString)
                 .setPositiveButton("Ok") { _, _ ->
                 }.show()
         }
 
-        badges_layout.addView(mImageView)
+        badges_layout.addView(mImageView) // Add to badges holder view.
     }
 
+    // Changes numerical month value from Date to equivalent string name.
     private fun monthToString(month: Int?): String {
         // Month field uses values from 0-11.
         when (month) {
@@ -323,8 +341,8 @@ class HomeFragment : Fragment() {
         return ""
     }
 
-    // Create lists containing references to badge locations
-    init{
+    // Create lists containing references to badge image locations
+    init {
         badgesConsistency = listOf(
             R.mipmap.badge_consistency_1_foreground,
             R.mipmap.badge_consistency_10_foreground,

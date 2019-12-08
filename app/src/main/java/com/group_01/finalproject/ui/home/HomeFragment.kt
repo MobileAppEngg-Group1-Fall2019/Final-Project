@@ -44,51 +44,6 @@ class HomeFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         dbHelper = DBInterface(context = this.context!!)
 
-        // TODO :- vvvvv TEST ONLY, REMOVE FOR FINAL BUILD vvvvv
-        val currentTime: Date = Calendar.getInstance().time
-
-        val testCare = arrayListOf(
-            CareModel(1, 1, Date(2019, 8, 7), "Caption", true),
-            CareModel(2, 1, Date(2019, 9, 7), "Caption", false),
-            CareModel(3, 1, Date(2019, 10, 7), "Caption", true),
-            CareModel(4, 1, Date(2019, 11, 7), "Caption", true)
-        )
-        val testPlant = PlantModel(
-            1,
-            "Bob",
-            "Cactus",
-            "Alive",
-            true,
-            1,
-            currentTime
-        )
-        // TODO :- ^^^^^ TEST ONLY, REMOVE FOR FINAL BUILD ^^^^^
-
-        if (dbHelper.getAllUsers().size == 0) { // Creates the initial user.
-            val currentTime: Date = Calendar.getInstance().time
-            val initUser = UserModel(
-                1,
-                "user_name",
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                Date(currentTime.year, currentTime.month, currentTime.day),
-                12.123123,
-                13.12312312
-            )
-            dbHelper.insertUser(initUser) // Insert User into database.
-
-            // TODO :- vvvvv TEST ONLY, REMOVE FOR FINAL BUILD vvvvv
-            dbHelper.insertPlant(testPlant)
-            testCare.forEach {
-                dbHelper.insertCare(it)
-            }
-            // TODO :- ^^^^^ TEST ONLY, REMOVE FOR FINAL BUILD ^^^^^
-        }
-
         // Get User & Care data from database
         mUser = dbHelper.getUser(1) // Only one User per device.
         mCare = dbHelper.getAllCare()

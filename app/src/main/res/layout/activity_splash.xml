@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="@color/colorPrimary"
+        android:foregroundGravity="center"
         android:orientation="vertical">
 
         <ImageView
@@ -17,15 +18,17 @@
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:layout_gravity="center"
-            android:layout_weight="1"
+            android:contentDescription="@string/name"
+            android:foregroundGravity="center"
             app:srcCompat="@drawable/forget_me_not" />
 
         <TextView
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_gravity="center"
             android:fontFamily="@font/convergence"
+            android:foregroundGravity="center"
             android:text="@string/name"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Display2"

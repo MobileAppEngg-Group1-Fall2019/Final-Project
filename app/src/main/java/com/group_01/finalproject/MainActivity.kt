@@ -17,6 +17,8 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.group_01.finalproject.db.DBInterface
+import com.kwabenaberko.openweathermaplib.constants.Lang
+import com.kwabenaberko.openweathermaplib.constants.Units
 import com.kwabenaberko.openweathermaplib.implementation.OpenWeatherMapHelper
 import com.kwabenaberko.openweathermaplib.implementation.callbacks.CurrentWeatherCallback
 import com.kwabenaberko.openweathermaplib.models.currentweather.CurrentWeather
@@ -37,7 +39,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val helper = OpenWeatherMapHelper(getString(R.string.OPEN_WEATHER_MAP_API_KEY))
+        val weatherHelper = OpenWeatherMapHelper(getString(R.string.OPEN_WEATHER_MAP_API_KEY))
+        weatherHelper.setUnits(Units.IMPERIAL)
+        weatherHelper.setLang(Lang.ENGLISH)
         /* Instantiate db and anything related */
         // dateFormatter.setTimeZone(timeZone)
         dbHelper = DBInterface(this)
@@ -47,7 +51,7 @@ class MainActivity : AppCompatActivity() {
 
         ActivityCompat.requestPermissions(this, permissions,PERMISSIONS_LOCATION)
 
-        helper.getCurrentWeatherByCityName("Accra", object : CurrentWeatherCallback {
+        weatherHelper.getCurrentWeatherByCityName("Accra", object : CurrentWeatherCallback {
             override fun onSuccess(currentWeather: CurrentWeather) {
                 Log.v(
                     "#### API Test",

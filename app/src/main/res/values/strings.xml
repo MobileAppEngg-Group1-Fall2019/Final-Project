@@ -7,6 +7,11 @@
     <string name="subtitle_points">Total Points</string>
     <string name="subtitle_history">Plant Care History</string>
     <string name="OPEN_WEATHER_MAP_API_KEY">956fc90708ef1ae3e63d2495096ceef9</string>
+    <string-array name="type_list">
+        <item>Tomato</item>
+        <item>Succulent</item>
+        <item>Peppers</item>
+    </string-array>
 
 
     <!--DESCRIPTIONS FOR BADGE POP-UPS-->

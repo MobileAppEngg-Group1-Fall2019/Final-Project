@@ -29,6 +29,10 @@ class DBInterface(context: Context) {
         return dbHelper.readUser(userID).get(0)
     }
 
+    fun updateUser(user: UserModel): Boolean {
+        return dbHelper.updateUser(user)
+    }
+
     fun getPlant(plantID: Long): PlantModel {
         return dbHelper.readPlant(plantID).get(0)
     }

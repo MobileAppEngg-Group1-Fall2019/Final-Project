@@ -72,6 +72,22 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
         return newRowId
     }
 
+    @Throws(SQLiteConstraintException::class)
+    fun updateUser(user: UserModel): Boolean {
+        val db = this.writableDatabase
+        val values = ContentValues()
+        values.put(DBContract.UserEntry.POINTS, user.points)
+        values.put(DBContract.UserEntry.CONSISTENCY_BADGE, user.consistencyBadge)
+        values.put(DBContract.UserEntry.DIVERSITY_BADGE, user.diversityBadge)
+        values.put(DBContract.UserEntry.PHOTOS_BADGE, user.photosBadge)
+        values.put(DBContract.UserEntry.GREEN_THUMB_BADGE, user.greenThumbBadge)
+        values.put(DBContract.UserEntry.BADGE_OF_BADGES, user.badgeOfBadges)
+        values.put(DBContract.UserEntry.LAT, user.lat)
+        values.put(DBContract.UserEntry.LONG, user.long)
+        db.update(DBContract.UserEntry.TABLE_NAME, values, "_id = ?", arrayOf(user.userId.toString()))
+        return true
+    }
+
     fun readUser(userId: Long): ArrayList<UserModel> {
         val users = ArrayList<UserModel>()
         val db = writableDatabase

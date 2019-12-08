@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
                 0,
                 0,
                 0,
-                Date(currentTime.year, currentTime.month, currentTime.day),
+                currentTime,
                 12.123123,
                 13.12312312
             )
@@ -119,29 +119,6 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        /*
-        //Basic db tests - left them in for reference for now
-        var imageSample: Bitmap = DbBitmapUtil.imageURLToBitmap("https://picsum.photos/200/300")
-
-        var imageView: ImageView = findViewById<ImageView>(R.id.imageView)
-
-        val currentTime: Date = Calendar.getInstance().getTime();
-        Log.d("Time format: ", currentTime.toString())
-        val idOne = dbHelper.insertUser(UserModel(1, "John", 0, 0, 0, 0, 0, 0))
-
-        val user: UserModel = dbHelper.getUser(idOne)
-        Log.d("#### DB Test", user.name)
-
-
-        val idTwo = dbHelper.insertPlant(PlantModel(1, "planty", "tomato", "livin", true, 5))
-        val idThree = dbHelper.insertImage(ImageModel(0, 1, DbBitmapUtil.getBytes(imageSample), currentTime))
-
-        val plant: PlantModel = dbHelper.getPlant(idTwo)
-        Log.d("#### DB Test", plant.name)
-        val image: ImageModel = dbHelper.getImage(idThree)
-        Log.d("#### DB Test", "" + image.lastModified)
-       imageView.setImageBitmap(DbBitmapUtil.getImage(image.data))
-        */
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
 
@@ -173,10 +150,11 @@ class MainActivity : AppCompatActivity() {
                     mlocation = location
                     Log.d("#### Location Changes", location.toString())
                     val currentTime: Date = Calendar.getInstance().getTime();
-                    val user: UserModel = UserModel(1, "Bobert", 0, 0, 0, 0, 0, 0, currentTime, location.latitude, location.longitude)
-                    val userid = dbHelper.insertUser(user)
-                    val readingUser: UserModel = dbHelper.getUser(userid)
-                    Log.d("#### User", user.name + ", lat: " + user.lat + ", long: " + user.long)
+                    if(dbHelper.getAllUsers().size == 0) {
+                        val user: UserModel = UserModel(1, "Bobert", 0, 0, 0, 0, 0, 0, currentTime, location.latitude, location.longitude)
+                        val userid = dbHelper.insertUser(user)
+                    }
+
                 }
 
                 override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {

@@ -24,6 +24,11 @@ import com.kwabenaberko.openweathermaplib.implementation.callbacks.CurrentWeathe
 import com.kwabenaberko.openweathermaplib.models.currentweather.CurrentWeather
 import java.text.SimpleDateFormat
 import java.util.*
+import android.location.LocationListener
+import android.os.Looper
+import android.location.Criteria
+import com.group_01.finalproject.db.UserModel
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -49,7 +54,7 @@ class MainActivity : AppCompatActivity() {
         StrictMode.setThreadPolicy(policy)
 
 
-        ActivityCompat.requestPermissions(this, permissions,PERMISSIONS_LOCATION)
+        ActivityCompat.requestPermissions(this, permissions, PERMISSIONS_LOCATION)
 
         weatherHelper.getCurrentWeatherByCityName("Accra", object : CurrentWeatherCallback {
             override fun onSuccess(currentWeather: CurrentWeather) {
@@ -106,22 +111,54 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
     }
 
-    fun getCurrentLocation(locManager: LocationManager, network_enabled: Boolean) {
+    fun getCurrentLocation() {
         val location: Location?
+        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val network_enabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
 
         if (network_enabled && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
             == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
             == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NETWORK_STATE)
             == PackageManager.PERMISSION_GRANTED) {
 
-            location = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+            val locationListener = object : LocationListener {
+                lateinit var mlocation: Location
+                override fun onLocationChanged(location: Location) {
+                    mlocation = location
+                    Log.d("#### Location Changes", location.toString())
+                    val currentTime: Date = Calendar.getInstance().getTime();
+                    val user: UserModel = UserModel(1, "Bobert", 0, 0, 0, 0, 0, 0, currentTime, location.latitude, location.longitude)
+                    val userid = dbHelper.insertUser(user)
+                    val readingUser: UserModel = dbHelper.getUser(userid)
+                    Log.d("#### User", user.name + ", lat: " + user.lat + ", long: " + user.long)
+                }
 
-            if (location != null) {
-                longitude = location.longitude
-                latitude = location.latitude
-                Log.i("Location", "$longitude + $latitude")
+                override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
+                    Log.d("Status Changed", status.toString())
+                }
+
+                override fun onProviderEnabled(provider: String) {
+                    Log.d("Provider Enabled", provider)
+                }
+
+                override fun onProviderDisabled(provider: String) {
+                    Log.d("Provider Disabled", provider)
+                }
             }
-            Log.i("Location", "BAAAAD")
+
+            val criteria = Criteria()
+            criteria.accuracy = Criteria.ACCURACY_COARSE
+            criteria.powerRequirement = Criteria.POWER_LOW
+            criteria.isAltitudeRequired = false
+            criteria.isBearingRequired = false
+            criteria.isSpeedRequired = false
+            criteria.isCostAllowed = true
+            criteria.horizontalAccuracy = Criteria.ACCURACY_HIGH
+            criteria.verticalAccuracy = Criteria.ACCURACY_HIGH
+
+            val looper: Looper? = null
+            locationManager.requestSingleUpdate(criteria, locationListener, looper);
+
         }
     }
     override fun onRequestPermissionsResult(requestCode: Int,
@@ -133,9 +170,7 @@ class MainActivity : AppCompatActivity() {
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
                     // Get location upon opening app
-                    val locManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-                    val network_enabled = locManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-                    getCurrentLocation(locManager, network_enabled)
+                    getCurrentLocation()
 
                 } else {
                     // permission denied, boo! Disable the

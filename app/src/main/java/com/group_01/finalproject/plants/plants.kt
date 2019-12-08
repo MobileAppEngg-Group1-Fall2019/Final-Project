@@ -3,6 +3,7 @@ package com.group_01.finalproject.plants
 object Plants {
     class Tomato {
         companion object {
+            const val type = "tomato"
             const val waterFreq = 2
             const val instructions = ""
         }

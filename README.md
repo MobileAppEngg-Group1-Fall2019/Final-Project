@@ -16,11 +16,11 @@ In order to make the application more appealing and enganging to the user, we us
 
 Below are a selection of potential badges a user can earn:
 <p align="center">
-<img src="https://github.com/MobileAppEngg-Group1-Fall2019/Badges/blob/master/badgeOfBadges_10.png" height="50">
-<img src="https://github.com/MobileAppEngg-Group1-Fall2019/Badges/blob/master/consistency_100.png" height="50">
-<img src="https://github.com/MobileAppEngg-Group1-Fall2019/Badges/blob/master/diversity_10.png" height="50">
-<img src="https://github.com/MobileAppEngg-Group1-Fall2019/Badges/blob/master/photographer_10000.png" height="50">
-<img src="https://github.com/MobileAppEngg-Group1-Fall2019/Badges/blob/master/greenThumb_1000.png" height="50">
+<img src="https://github.com/MobileAppEngg-Group1-Fall2019/Badges/blob/master/badgeOfBadges_10.png" height="100">
+<img src="https://github.com/MobileAppEngg-Group1-Fall2019/Badges/blob/master/consistency_100.png" height="100">
+<img src="https://github.com/MobileAppEngg-Group1-Fall2019/Badges/blob/master/diversity_10.png" height="100">
+<img src="https://github.com/MobileAppEngg-Group1-Fall2019/Badges/blob/master/photographer_10000.png" height="100">
+<img src="https://github.com/MobileAppEngg-Group1-Fall2019/Badges/blob/master/greenThumb_1000.png" height="100">
 </p>
 
 ### Weather Notifications

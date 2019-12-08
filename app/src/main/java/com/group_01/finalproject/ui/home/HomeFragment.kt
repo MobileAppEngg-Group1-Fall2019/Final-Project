@@ -12,13 +12,11 @@ import androidx.lifecycle.ViewModelProviders
 import com.group_01.finalproject.R
 import com.group_01.finalproject.db.CareModel
 import com.group_01.finalproject.db.DBInterface
-import com.group_01.finalproject.db.PlantModel
 import com.group_01.finalproject.db.UserModel
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.history_card.view.*
 import java.util.*
 
-@Suppress("DEPRECATION")
 class HomeFragment : Fragment() {
 
     private lateinit var homeViewModel: HomeViewModel
@@ -56,14 +54,10 @@ class HomeFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     private fun createText() {
         val points = mUser?.points.toString()
-        val year = mUser?.creationDate?.year
-        val month = mUser?.creationDate?.month
-        val day = mUser?.creationDate?.day
-
-        val stringMonth = monthToString(month)
+        val mDate = formatDate(mUser?.creationDate) // Date format: M/D/Y
 
         value_total_points.text = "Total Points: $points"
-        value_start_date.text = "Gardening Since $stringMonth $day, $year!"
+        value_start_date.text = "Gardening Since ${mDate[0]} ${mDate[1]}, ${mDate[2]}!"
     }
 
     // Create and add image view of badges to badges_layout using User db data.
@@ -110,9 +104,7 @@ class HomeFragment : Fragment() {
         mCare?.forEach {
             val layoutInflater = LayoutInflater.from(context)
             val plant = dbHelper.getPlant(it.plantID)
-            val year = it.date.year
-            val month = monthToString(it.date.month)
-            val day = it.date.day
+            val mDate = formatDate(it.date) // Date format: M/D/Y
 
             val card: View = layoutInflater.inflate( // Inflate History Card Layout.
                 R.layout.history_card,
@@ -123,7 +115,7 @@ class HomeFragment : Fragment() {
             // Set TextViews for History Card.
             card.card_name.text = plant.name
             card.card_type.text = plant.type
-            card.card_date.text = "$month $day, $year"
+            card.card_date.text = "${mDate[0]} ${mDate[1]}, ${mDate[2]}"
 
             // This is ugly but deal with it!
             card.card_bool.text = if (it.completed) "Watered: Yes" else "Watered: No"
@@ -294,6 +286,17 @@ class HomeFragment : Fragment() {
             11 -> return "December"
         }
         return ""
+    }
+
+    // Formats Date constructor format to MONTH - DAY - YEAR format.
+    private fun formatDate(date: Date?): List<Any> {
+        val calendar: Calendar = GregorianCalendar()
+        calendar.time = date
+        val year = calendar[Calendar.YEAR]
+        val month = monthToString(calendar[Calendar.MONTH])
+        val day = calendar[Calendar.DAY_OF_MONTH]
+
+        return listOf(month,day,year)
     }
 
     // Create lists containing references to badge image locations

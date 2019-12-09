@@ -28,7 +28,8 @@ class ListAdapter (private val list: ArrayList<PlantModel>, private val dBHelper
         holder.itemView.setOnLongClickListener{ view ->
             // Update last watered plant
             val currentTime: Date = Calendar.getInstance().time
-            //TODO: add this in --> dBHelper.updateLastCare(plant.plantId, currentTime)
+            val updatedPlant = PlantModel(plant.plantId, plant.name, plant.type, plant.status, plant.indoor, plant.age, currentTime)
+            dBHelper.updatePlant(updatedPlant)
             this.notifyDataSetChanged()
             true
         }

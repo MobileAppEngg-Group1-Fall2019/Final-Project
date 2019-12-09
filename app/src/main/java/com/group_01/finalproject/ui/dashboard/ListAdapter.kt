@@ -1,6 +1,5 @@
 package com.group_01.finalproject.ui.dashboard
 
-
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -12,7 +11,7 @@ import com.group_01.finalproject.db.DbBitmapUtil
 import com.group_01.finalproject.db.PlantModel
 import java.util.*
 
-class ListAdapter (private val list: ArrayList<PlantModel>)
+class ListAdapter (private val list: ArrayList<PlantModel>, private val dBHelper: DBInterface)
     : RecyclerView.Adapter<ViewHolder>() {
 
     var onItemClick: ((PlantModel) -> Unit)? = null
@@ -23,8 +22,16 @@ class ListAdapter (private val list: ArrayList<PlantModel>)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val name = list[position]
-        holder.bind(name)
+        val plant = list[position]
+        holder.bind(plant)
+
+        holder.itemView.setOnLongClickListener{ view ->
+            // Update last watered plant
+            val currentTime: Date = Calendar.getInstance().time
+            //TODO: add this in --> dBHelper.updateLastCare(plant.plantId, currentTime)
+            this.notifyDataSetChanged()
+            true
+        }
     }
 
     override fun getItemCount(): Int = list.size

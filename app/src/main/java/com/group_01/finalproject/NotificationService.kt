@@ -51,6 +51,7 @@ class NotificationService : Service() {
             Log.i(TAG, "Plants to be watered: $plantsToWater")
             // send notification
             val notification = Notification.Builder(this)
+                .setSmallIcon(R.drawable.forget_me_not)
                 .setContentTitle("Time to water your plants!")
                 .setContentText("Water: $plantsToWater")
                 .build()

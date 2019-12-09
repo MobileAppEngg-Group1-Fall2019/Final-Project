@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.group_01.finalproject.R
 import com.group_01.finalproject.db.DBInterface
@@ -30,7 +31,10 @@ class ListAdapter (private val list: ArrayList<PlantModel>, private val dBHelper
             val currentTime: Date = Calendar.getInstance().time
             val updatedPlant = PlantModel(plant.plantId, plant.name, plant.type, plant.status, plant.indoor, plant.age, currentTime)
             dBHelper.updatePlant(updatedPlant)
+            list.remove(plant)
+            list.add(updatedPlant)
             this.notifyDataSetChanged()
+            Toast.makeText(view.context, "Thank you for watering ${plant.name}!", Toast.LENGTH_SHORT).show()
             true
         }
     }

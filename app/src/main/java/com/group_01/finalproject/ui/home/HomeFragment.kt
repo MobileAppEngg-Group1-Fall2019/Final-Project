@@ -69,7 +69,7 @@ class HomeFragment : Fragment() {
 
     // Create and add image view of badges to badges_layout using User db data.
     private fun createBadges() {
-        for(i in 0 until (mUser!!.consistencyBadge)) {  // CONSISTENCY BADGE  // Range: 0-5
+        for(i in 0 until mUser!!.consistencyBadge) {  // CONSISTENCY BADGE  // Range: 0-5
             addBadge(badgesConsistency, i)
         }
         for(i in 0 until mUser!!.diversityBadge) {  // DIVERSITY BADGE   // Range: 0-6
@@ -92,7 +92,6 @@ class HomeFragment : Fragment() {
         mCare?.forEach {
             val layoutInflater = LayoutInflater.from(context)
             val plant = dbHelper.getPlant(it.plantID)
-
             val mDate = formatDate(it.date) // Date format: M/D/Y
 
             val card: View = layoutInflater.inflate( // Inflate History Card Layout.
@@ -200,7 +199,6 @@ class HomeFragment : Fragment() {
 
         // Calculates Badge of Badges
         val total = consistency + diversity + photographer + greenThumb
-        Log.d("TOTAL BADGES","$total")
         val ofBadges = if(total >= 5) floor(log2(total / 5.0)).toInt()+1 else 0
 
         // Calculates Points
@@ -222,6 +220,18 @@ class HomeFragment : Fragment() {
             curUser.lat,
             curUser.long
         )
+
+        // Informs the User with a pop-up if they have earned new badge(s).
+        if (compareValuesBy(curUser, newUser,
+                { it.consistencyBadge }, { it.diversityBadge }, {it.photosBadge},
+                { it.greenThumbBadge }, { it.badgeOfBadges }) != 0)
+        {
+            val alert: AlertDialog.Builder = AlertDialog.Builder(context)
+            alert.setTitle("Congratulations!") // Alert type pop-up.
+                .setMessage("You have unlocked new badge(s)! Check your collection to see what you have earned.")
+                .setPositiveButton("Thanks") { _, _ ->
+                }.show()
+        }
 
         // Update User in database.
         dbHelper.updateUser(newUser)

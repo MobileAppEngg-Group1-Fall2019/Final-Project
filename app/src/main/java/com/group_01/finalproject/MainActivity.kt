@@ -133,6 +133,7 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+        startService(Intent(this, WeatherService::class.java))
 
         val user:UserModel = dbHelper.getUser(1)
         Log.d("#### Service test", "points: " + user.points)

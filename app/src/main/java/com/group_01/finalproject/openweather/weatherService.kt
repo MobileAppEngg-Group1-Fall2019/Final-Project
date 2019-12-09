@@ -16,53 +16,46 @@ import com.kwabenaberko.openweathermaplib.models.currentweather.CurrentWeather
 import com.kwabenaberko.openweathermaplib.implementation.callbacks.CurrentWeatherCallback
 import android.R
 import android.app.job.JobParameters
+import android.app.AlarmManager.RTC_WAKEUP
+import android.app.AlarmManager
+import android.os.IBinder
 
 
-class TestJobService : JobService() {
 
-    override fun onStartJob(params: JobParameters): Boolean {
-        val service = Intent(applicationContext, WeatherIntentService::class.java)
-        applicationContext.startService(service)
-        Util.scheduleJob(applicationContext) // reschedule the job
-        return true
+
+class WeatherService : Service() {
+    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+        // Query the database and show alarm if it applies
+        // For actual api stuff, copy over weather intent service functionality - this is just here to show you it works
+        Log.d("### Service Test", "Service running")
+        var dbHelper = DBInterface(this)
+        // val weatherHelper = OpenWeatherMapHelper(getString(R.string.OPEN_WEATHER_MAP_API_KEY))
+        // weatherHelper.setUnits(Units.IMPERIAL)
+        // weatherHelper.setLang(Lang.ENGLISH)
+        val TAG = "### Weather API"
+        var user: UserModel = dbHelper.getUser(1)
+        var newUser: UserModel = UserModel(user.userId, user.name, user.points + 1, user.consistencyBadge, user.diversityBadge, user.photosBadge, user.greenThumbBadge, user.badgeOfBadges, user.creationDate, user.lat, user.long)
+        dbHelper.updateUser(newUser)
+        // I don't want this service to stay in memory, so I stop it
+        // immediately after doing what I wanted it to do.
+        stopSelf()
+
+        return Service.START_NOT_STICKY
     }
 
-    override fun onStopJob(params: JobParameters): Boolean {
-        return true
+    override fun onBind(intent: Intent): IBinder? {
+        return null
     }
 
-    companion object {
-        private val TAG = "SyncService"
+    override fun onDestroy() {
+        // I want to restart this service again in one hour
+        val alarm: AlarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarm.set(
+            AlarmManager.RTC_WAKEUP,
+            System.currentTimeMillis() + 1000 * 60 * 60 /* To test, change this time to 10000 (every 10 seconds) */,
+            PendingIntent.getService(this, 0, Intent(this, WeatherService::class.java), 0)
+        )
     }
-
-}
-
-class WeatherService : JobService {
-    private lateinit var alarmIntent: PendingIntent
-    var counter = 0
-
-    constructor(applicationContext: Context) : super() {
-
-        Log.i("SERVICE", "hService started")
-    }
-
-    constructor() {}
-
-    private val TAG = "SyncService"
-
-    override fun onStartJob(params: JobParameters): Boolean {
-        val service = Intent(applicationContext, WeatherIntentService::class.java)
-        applicationContext.startService(service)
-        Util.scheduleJob(applicationContext) // reschedule the job
-        return true
-    }
-
-    override fun onStopJob(params: JobParameters): Boolean {
-        return true
-    }
-
-
-
 }
 
 class WeatherIntentService : IntentService("WeatherIntentService") {

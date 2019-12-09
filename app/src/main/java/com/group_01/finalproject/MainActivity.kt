@@ -55,9 +55,7 @@ class MainActivity : AppCompatActivity() {
         dbHelper = DBInterface(this)
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
-        Intent(this, WeatherIntentService::class.java).also { intent ->
-            startService(intent)
-        }
+
         // TODO :- vvvvv TEST ONLY, REMOVE FOR FINAL BUILD vvvvv
         val curTime: Date = Calendar.getInstance().time
 
@@ -109,24 +107,11 @@ class MainActivity : AppCompatActivity() {
 
         ActivityCompat.requestPermissions(this, permissions, PERMISSIONS_LOCATION)
 
-        weatherHelper.getCurrentWeatherByCityName("Accra", object : CurrentWeatherCallback {
-            override fun onSuccess(currentWeather: CurrentWeather) {
-                Log.v(
-                    "#### API Test",
-                    "Coordinates: " + currentWeather.coord.lat + ", " + currentWeather.coord.lon + "\n"
-                            + "Weather Description: " + currentWeather.weather[0].description + "\n"
-                            + "Temperature: " + currentWeather.main.tempMax + "\n"
-                            + "Wind Speed: " + currentWeather.wind.speed + "\n"
-                            + "City, Country: " + currentWeather.name + ", " + currentWeather.sys.country
-                )
-            }
 
-            override fun onFailure(throwable: Throwable) {
-                Log.v("#### API Test", throwable.message)
-            }
-        })
-
-
+        Intent(this, WeatherIntentService::class.java).also { intent ->
+            startService(intent)
+        }
+      
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
 
         val navController = findNavController(R.id.nav_host_fragment)

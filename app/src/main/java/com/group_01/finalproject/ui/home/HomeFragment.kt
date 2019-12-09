@@ -112,6 +112,7 @@ class HomeFragment : Fragment() {
         mCare?.forEach {
             val layoutInflater = LayoutInflater.from(context)
             val plant = dbHelper.getPlant(it.plantID)
+
             val mDate = formatDate(it.date) // Date format: M/D/Y
 //<<<<<<< HEAD
 //
@@ -281,68 +282,6 @@ class HomeFragment : Fragment() {
         }
 
         badges_layout.addView(mImageView) // Add to badges holder view.
-    }
-
-    // Calculates the current number of points and badges and update the User in database.
-    private fun updateUser() {
-        val curUser = dbHelper.getUser(1)
-        var numOfWatering = 0
-        dbHelper.getAllCare().forEach {
-            if(it.completed) {
-                numOfWatering++
-            }
-        }
-
-        var consistency = 0.0
-        val reverseListOfCares = dbHelper.getAllCare()
-        reverseListOfCares.reverse()
-
-        run loop@{
-            reverseListOfCares.forEach{
-                Log.d("REVERSE LIST OF CARES", "${it.completed}")
-                if (!it.completed)
-                    return@loop
-                consistency++
-            }
-        }
-
-        val consistencyB = if(consistency != 0.0) floor(log10(consistency)).toInt()+1 else 0
-
-        val diversity = dbHelper.getAllPlants().distinct().size / 2
-
-        val photoAmt = dbHelper.getAllImages().size.toDouble()
-        val photographer = if(photoAmt != 0.0) floor(log10(photoAmt)).toInt()+1 else 0
-
-        val greenAmt = numOfWatering.toDouble()
-        val greenThumb = if(greenAmt != 0.0) floor(log10(greenAmt)).toInt()+1 else 0
-
-        val total = consistencyB + diversity + photographer + greenThumb
-
-        val ofBadges = floor(log2(total / 5.0)).toInt()+1
-
-        val points = numOfWatering * 10
-
-
-        Log.d("DAN", "$consistencyB, $diversity, $photographer, $greenThumb, $ofBadges, $points")
-
-        val newUser = UserModel(
-            curUser.userId,
-            curUser.name,
-
-            // New data to be updated.
-            points,
-            consistencyB,
-            diversity,
-            photographer,
-            greenThumb,
-            ofBadges,
-
-            curUser.creationDate,
-            curUser.lat,
-            curUser.long
-        )
-
-        dbHelper.updateUser(newUser)
     }
 
     // Changes numerical month value from Date to equivalent string name.

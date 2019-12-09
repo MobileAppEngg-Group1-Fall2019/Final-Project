@@ -477,9 +477,11 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
                 plantId = cursor.getLong(cursor.getColumnIndex(DBContract.CareEntry.PLANT_ID))
                 completed = cursor.getInt(cursor.getColumnIndex(DBContract.CareEntry.COMPLETED)) > 0
                 cares.add(CareModel(careId, plantId, dateFormatter.parse(date), caption, completed))
+
                 cursor.moveToNext()
             }
         }
+
         return cares
     }
 
@@ -510,6 +512,8 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
                 plantId = cursor.getLong(cursor.getColumnIndex(DBContract.CareEntry.PLANT_ID))
                 completed = cursor.getInt(cursor.getColumnIndex(DBContract.CareEntry.COMPLETED)) > 0
                 cares.add(CareModel(careId, plantId, dateFormatter.parse(date), caption, completed))
+                Log.d("#### Read Care", date)
+                Log.d("#### Care date", cares.get(0).date.month.toString())
                 cursor.moveToNext()
             }
         }

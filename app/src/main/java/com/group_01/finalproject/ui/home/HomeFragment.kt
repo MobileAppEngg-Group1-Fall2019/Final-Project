@@ -3,6 +3,7 @@ package com.group_01.finalproject.ui.home
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -104,7 +105,13 @@ class HomeFragment : Fragment() {
         mCare?.forEach {
             val layoutInflater = LayoutInflater.from(context)
             val plant = dbHelper.getPlant(it.plantID)
+<<<<<<< HEAD
             val mDate = formatDate(it.date) // Date format: M/D/Y
+=======
+            val year = it.date.year
+            val month = monthToString(it.date.month)
+            val day = it.date.day.toString()
+>>>>>>> Setup intent service structure
 
             val card: View = layoutInflater.inflate( // Inflate History Card Layout.
                 R.layout.history_card,

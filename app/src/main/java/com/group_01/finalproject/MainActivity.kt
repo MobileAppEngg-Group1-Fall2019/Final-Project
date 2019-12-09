@@ -2,6 +2,7 @@ package com.group_01.finalproject
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
@@ -54,15 +55,18 @@ class MainActivity : AppCompatActivity() {
         dbHelper = DBInterface(this)
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
-
+        Intent(this, WeatherIntentService::class.java).also { intent ->
+            startService(intent)
+        }
         // TODO :- vvvvv TEST ONLY, REMOVE FOR FINAL BUILD vvvvv
         val curTime: Date = Calendar.getInstance().time
 
         val testCare = arrayListOf(
-            CareModel(1, 1, Date(119, 8, 7), "Caption", true),
-            CareModel(2, 1, Date(119, 9, 7), "Caption", false),
-            CareModel(3, 1, Date(119, 10, 7), "Caption", true),
-            CareModel(4, 1, Date(119, 11, 7), "Caption", true)
+            CareModel(1, 1, curTime, "Caption", true),
+            CareModel(2, 1, curTime, "Caption", false),
+            CareModel(3, 1, curTime, "Caption", true),
+            CareModel(4, 1, curTime, "Caption", true)
+
         )
         val testPlant = PlantModel(
             1,
@@ -91,6 +95,8 @@ class MainActivity : AppCompatActivity() {
                 12.123123,
                 13.12312312
             )
+
+
             dbHelper.insertUser(initUser) // Insert User into database.
 
             // TODO :- vvvvv TEST ONLY, REMOVE FOR FINAL BUILD vvvvv

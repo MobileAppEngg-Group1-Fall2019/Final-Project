@@ -3,6 +3,7 @@ package com.group_01.finalproject.ui.dashboard
 
 import android.app.Dialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -94,6 +95,7 @@ class DashboardFragment : Fragment() {
                 val name = nameEdit?.text.toString()
                 val ageText = ageEdit?.text.toString()
                 val type = selectedType
+                Log.d("#### Test", ageText.toString())
                 if (name.isNotEmpty() && ageText.isNotEmpty() && type.isNotEmpty()) {
                     val age = Integer.parseInt(ageText)
                     val currentTime: Date = Calendar.getInstance().time

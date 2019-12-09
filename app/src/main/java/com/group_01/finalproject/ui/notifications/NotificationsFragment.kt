@@ -182,8 +182,9 @@ class NotificationsFragment : Fragment() {
             val bitmap = BitmapFactory.decodeFile(imagePath, options)
 
             // Do something with the bitmap
+            val scaledbitmap = Bitmap.createScaledBitmap(bitmap,500,bitmap.height*500/bitmap.width,false)
 
-            var newImageforDB : ImageModel = ImageModel(-1, selectedPlantID,DbBitmapUtil.getBytes(bitmap),
+            var newImageforDB : ImageModel = ImageModel(-1, selectedPlantID,DbBitmapUtil.getBytes(scaledbitmap),
                 Calendar.getInstance().getTime())
 
             Log.d("Manishtesting",selectedPlantID.toString())

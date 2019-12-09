@@ -89,6 +89,18 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
     }
 
     @Throws(SQLiteConstraintException::class)
+    fun updateCare(care: CareModel): Boolean {
+        val db = this.writableDatabase
+        val values = ContentValues()
+        values.put(DBContract.CareEntry.DATE, dateFormatter.format(care.date))
+        values.put(DBContract.CareEntry.CAPTION, care.caption)
+        values.put(DBContract.CareEntry.PLANT_ID, care.plantID)
+        values.put(DBContract.CareEntry.COMPLETED, care.completed)
+        db.update(DBContract.CareEntry.TABLE_NAME, values, "${DBContract.CareEntry.CARE_ID} = ?", arrayOf(care.careID.toString()))
+        return true
+    }
+
+    @Throws(SQLiteConstraintException::class)
     fun updatePlant(plant: PlantModel): Boolean {
         val db = this.writableDatabase
         val values = ContentValues()
@@ -413,6 +425,41 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
             }
         }
         return images
+    }
+
+    fun readPlantCare(lastCareDate: Date): ArrayList<CareModel> {
+        val cares = ArrayList<CareModel>()
+        val db = writableDatabase
+        var cursor: Cursor? = null
+        val query =
+            "SELECT * FROM ${DBContract.CareEntry.TABLE_NAME} WHERE ${DBContract.CareEntry.DATE} = ${dateFormatter.format(lastCareDate)}"
+
+        try {
+            cursor = db.rawQuery(query, null)
+        } catch (e: SQLiteException) {
+            db.execSQL(SQL_CREATE_IMAGE)
+            return ArrayList()
+        }
+        var careId: Long
+        var date: String
+        var caption: String
+        var plantId: Long
+        var completed: Boolean
+
+        if (cursor!!.moveToFirst()) {
+            while (cursor.isAfterLast == false) {
+                careId = cursor.getLong(cursor.getColumnIndex(DBContract.CareEntry.CARE_ID))
+                date = cursor.getString(cursor.getColumnIndex(DBContract.CareEntry.DATE))
+                caption = cursor.getString(cursor.getColumnIndex(DBContract.CareEntry.CAPTION))
+                plantId = cursor.getLong(cursor.getColumnIndex(DBContract.CareEntry.PLANT_ID))
+                completed = cursor.getInt(cursor.getColumnIndex(DBContract.CareEntry.COMPLETED)) > 0
+                cares.add(CareModel(careId, plantId, dateFormatter.parse(date), caption, completed))
+
+                cursor.moveToNext()
+            }
+        }
+
+        return cares
     }
 
     fun readAllImages(): ArrayList<ImageModel> {

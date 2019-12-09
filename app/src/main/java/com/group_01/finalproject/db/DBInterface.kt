@@ -1,6 +1,8 @@
 package com.group_01.finalproject.db
 
 import android.content.Context
+import java.util.*
+import kotlin.collections.ArrayList
 
 class DBInterface(context: Context) {
     private lateinit var dbHelper: db
@@ -11,6 +13,14 @@ class DBInterface(context: Context) {
 
     fun closeConnection() {
         dbHelper.close()
+    }
+
+    fun updateCare(care: CareModel): Boolean {
+        return dbHelper.updateCare(care)
+    }
+
+    fun getPlantCare(lastCareDate: Date): ArrayList<CareModel> {
+        return dbHelper.readPlantCare(lastCareDate)
     }
 
     fun insertUser(user: UserModel): Long {

@@ -111,7 +111,7 @@ class MainActivity : AppCompatActivity() {
         Intent(this, WeatherIntentService::class.java).also { intent ->
             startService(intent)
         }
-      
+
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
 
         val navController = findNavController(R.id.nav_host_fragment)

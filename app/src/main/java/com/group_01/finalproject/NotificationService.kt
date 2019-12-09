@@ -1,11 +1,15 @@
 package com.group_01.finalproject
 
 
-import android.app.*
+import android.app.AlarmManager
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
 import android.util.Log
+import androidx.core.app.NotificationCompat
 import com.group_01.finalproject.db.DBInterface
 import java.util.*
 import kotlin.collections.ArrayList
@@ -21,7 +25,7 @@ class NotificationService : Service() {
         var plants = dbHelper.getAllPlants()
 
         // map of plant to water frequency
-        val map = mapOf("Tomato" to 2, "Cactus" to 5 , "Peppers" to 4)
+        val map = mapOf("Tomato" to 0, "Cactus" to 0 , "Peppers" to 0)
 
         val plantsToWater = ArrayList<String>()
         for (plant in plants) {
@@ -50,7 +54,7 @@ class NotificationService : Service() {
         } else {
             Log.i(TAG, "Plants to be watered: $plantsToWater")
             // send notification
-            val notification = Notification.Builder(this)
+            val notification = NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.ic_notifications_black_24dp)
                 .setContentTitle("Time to water your plants!")
                 .setContentText("Water: $plantsToWater")

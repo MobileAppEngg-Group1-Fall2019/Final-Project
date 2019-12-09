@@ -1,13 +1,12 @@
-package com.group_01.finalproject
+package com.group_01.finalproject.openweather
 
-import android.app.AlarmManager
 import android.app.IntentService
 import android.app.PendingIntent
 import android.app.Service
+import android.app.job.JobService
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import android.icu.util.ULocale.getCountry
 import com.group_01.finalproject.db.DBInterface
 import com.group_01.finalproject.db.UserModel
 import com.kwabenaberko.openweathermaplib.constants.Lang
@@ -15,11 +14,30 @@ import com.kwabenaberko.openweathermaplib.constants.Units
 import com.kwabenaberko.openweathermaplib.implementation.OpenWeatherMapHelper
 import com.kwabenaberko.openweathermaplib.models.currentweather.CurrentWeather
 import com.kwabenaberko.openweathermaplib.implementation.callbacks.CurrentWeatherCallback
-import android.os.IBinder
-import android.os.SystemClock
+import android.R
+import android.app.job.JobParameters
 
 
-class WeatherService : Service {
+class TestJobService : JobService() {
+
+    override fun onStartJob(params: JobParameters): Boolean {
+        val service = Intent(applicationContext, WeatherIntentService::class.java)
+        applicationContext.startService(service)
+        Util.scheduleJob(applicationContext) // reschedule the job
+        return true
+    }
+
+    override fun onStopJob(params: JobParameters): Boolean {
+        return true
+    }
+
+    companion object {
+        private val TAG = "SyncService"
+    }
+
+}
+
+class WeatherService : JobService {
     private lateinit var alarmIntent: PendingIntent
     var counter = 0
 
@@ -30,60 +48,20 @@ class WeatherService : Service {
 
     constructor() {}
 
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        super.onStartCommand(intent, flags, startId)
+    private val TAG = "SyncService"
 
-        //instantiate your variables here
+    override fun onStartJob(params: JobParameters): Boolean {
+        val service = Intent(applicationContext, WeatherIntentService::class.java)
+        applicationContext.startService(service)
+        Util.scheduleJob(applicationContext) // reschedule the job
+        return true
+    }
 
-        //i call my startUpload method here to doing the task assigned to it
-
-        startUpload()
-
-        return START_STICKY
+    override fun onStopJob(params: JobParameters): Boolean {
+        return true
     }
 
 
-    fun startUpload() {
-
-        //call the method with your logic here
-
-        //mine is a sample to print a log after every x seconds
-
-        initializeTimerTask()
-
-    }
-
-    /**
-     * it sets the timer to print the counter every x seconds
-     */
-    fun initializeTimerTask() {
-        // timerTask = new TimerTask() {
-        var alarmMgr: AlarmManager? = null
-        alarmMgr?.setInexactRepeating(
-            AlarmManager.ELAPSED_REALTIME_WAKEUP,
-            SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_HALF_HOUR,
-            AlarmManager.INTERVAL_HALF_HOUR,
-            alarmIntent
-        )
-
-
-        //we can print it on the logs as below
-        Log.i("in timer", "in timer ++++  " + counter++)
-
-        //or use the print statement as below
-        println("Timer print " + counter++)
-
-    }
-
-    override fun onBind(intent: Intent): IBinder? {
-        return null
-    }
-
-
-    override fun onDestroy() {
-        super.onDestroy()
-        stopSelf()
-    }
 
 }
 
@@ -99,12 +77,14 @@ class WeatherIntentService : IntentService("WeatherIntentService") {
         // For our sample, we just sleep for 5 seconds.
         Log.d("### Service Test", "Service running")
         var dbHelper = DBInterface(this)
-        val weatherHelper = OpenWeatherMapHelper(getString(R.string.OPEN_WEATHER_MAP_API_KEY))
-        weatherHelper.setUnits(Units.IMPERIAL)
-        weatherHelper.setLang(Lang.ENGLISH)
+        // val weatherHelper = OpenWeatherMapHelper(getString(R.string.OPEN_WEATHER_MAP_API_KEY))
+        // weatherHelper.setUnits(Units.IMPERIAL)
+        // weatherHelper.setLang(Lang.ENGLISH)
         val TAG = "### Weather API"
         var user: UserModel = dbHelper.getUser(1)
-
+        var newUser: UserModel = UserModel(user.userId, user.name, user.points + 1, user.consistencyBadge, user.diversityBadge, user.photosBadge, user.greenThumbBadge, user.badgeOfBadges, user.creationDate, user.lat, user.long)
+        dbHelper.updateUser(newUser)
+/*
         weatherHelper.getCurrentWeatherByGeoCoordinates(user.lat, user.long, object : CurrentWeatherCallback {
             override fun onSuccess(currentWeather: CurrentWeather) {
                 Log.v(
@@ -121,12 +101,9 @@ class WeatherIntentService : IntentService("WeatherIntentService") {
                 Log.v(TAG, throwable.message)
             }
         })
-        try {
-            Thread.sleep(5000)
-        } catch (e: InterruptedException) {
-            // Restore interrupt status.
-            Thread.currentThread().interrupt()
-        }
+
+ */
+
 
     }
 }

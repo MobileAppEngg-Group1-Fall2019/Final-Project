@@ -13,9 +13,16 @@
         android:roundIcon="@mipmap/logo_forget_me_not_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <service android:name=".openweather.WeatherService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="true"/>
 
-        <service android:name=".WeatherService" />
-        <service android:name=".WeatherIntentService" />
+        <service android:name=".openweather.WeatherIntentService" />
+        <receiver android:name=".openweather.MyStartServiceReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
         <activity
             android:name=".SplashActivity"
             android:label="@string/app_name">

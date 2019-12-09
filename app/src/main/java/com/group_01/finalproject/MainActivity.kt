@@ -21,8 +21,6 @@ import com.group_01.finalproject.db.DBInterface
 import com.kwabenaberko.openweathermaplib.constants.Lang
 import com.kwabenaberko.openweathermaplib.constants.Units
 import com.kwabenaberko.openweathermaplib.implementation.OpenWeatherMapHelper
-import com.kwabenaberko.openweathermaplib.implementation.callbacks.CurrentWeatherCallback
-import com.kwabenaberko.openweathermaplib.models.currentweather.CurrentWeather
 import java.text.SimpleDateFormat
 import java.util.*
 import android.location.LocationListener
@@ -31,6 +29,10 @@ import android.location.Criteria
 import com.group_01.finalproject.db.CareModel
 import com.group_01.finalproject.db.PlantModel
 import com.group_01.finalproject.db.UserModel
+import com.group_01.finalproject.openweather.WeatherService
+import android.app.job.JobScheduler
+
+
 
 
 class MainActivity : AppCompatActivity() {
@@ -103,6 +105,7 @@ class MainActivity : AppCompatActivity() {
             // TODO :- ^^^^^ TEST ONLY, REMOVE FOR FINAL BUILD ^^^^^
         }
 
+
         // Checks if permissions are granted.
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
             ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
@@ -115,7 +118,8 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
-        startService()
+        Log.d("#### Job schedule check", isJobSchedulerRunning(this).toString())
+
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
 
@@ -129,6 +133,14 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        val user:UserModel = dbHelper.getUser(1)
+        Log.d("#### Service test", "points: " + user.points)
+    }
+
+    fun isJobSchedulerRunning(context: Context): Boolean {
+        val jobScheduler = context.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
+        return jobScheduler.allPendingJobs.size > 0
     }
 
     fun startService() {

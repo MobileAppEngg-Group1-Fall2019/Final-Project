@@ -9,6 +9,10 @@ class DBInterface(context: Context) {
         dbHelper = db(context)
     }
 
+    fun closeConnection() {
+        dbHelper.close()
+    }
+
     fun insertUser(user: UserModel): Long {
         return dbHelper.insertUser(user)
     }

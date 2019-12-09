@@ -36,6 +36,7 @@ class WeatherService : Service() {
         var user: UserModel = dbHelper.getUser(1)
         var newUser: UserModel = UserModel(user.userId, user.name, user.points + 1, user.consistencyBadge, user.diversityBadge, user.photosBadge, user.greenThumbBadge, user.badgeOfBadges, user.creationDate, user.lat, user.long)
         dbHelper.updateUser(newUser)
+        dbHelper.closeConnection()
         // I don't want this service to stay in memory, so I stop it
         // immediately after doing what I wanted it to do.
         stopSelf()

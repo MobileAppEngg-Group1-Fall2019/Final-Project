@@ -52,11 +52,11 @@ class DashboardFragment : Fragment() {
             dialog.setContentView(com.group_01.finalproject.R.layout.dialog)
             dialog.setTitle("Add New Plant")
 
-            val dropdown = dialog.findViewById(com.group_01.finalproject.R.id.spinnerPlantTypes) as Spinner
-            val nameEdit = view.findViewById(com.group_01.finalproject.R.id.name_value) as EditText
-            val ageEdit = view.findViewById(com.group_01.finalproject.R.id.age_value) as EditText
+            val dropdown = dialog.findViewById(com.group_01.finalproject.R.id.spinnerPlantTypes) as? Spinner
+            val nameEdit = dialog.findViewById(com.group_01.finalproject.R.id.name_value) as? EditText
+            val ageEdit = dialog.findViewById(com.group_01.finalproject.R.id.age_value) as? EditText
 
-            val indoorsSwitch = view.findViewById(com.group_01.finalproject.R.id.indoorSwitch) as Switch
+            val indoorsSwitch = dialog.findViewById(com.group_01.finalproject.R.id.indoorSwitch) as? Switch
 
             // Create an ArrayAdapter using the string array and a default spinner layout
             ArrayAdapter.createFromResource(
@@ -67,10 +67,10 @@ class DashboardFragment : Fragment() {
                 // Specify the layout to use when the list of choices appears
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 // Apply the adapter to the spinner
-                dropdown.adapter = adapter
+                dropdown?.adapter = adapter
             }
 
-            dropdown.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            dropdown?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
                 override fun onItemSelected(
                     parent: AdapterView<*>?,
@@ -91,15 +91,16 @@ class DashboardFragment : Fragment() {
             val dialogAddButton = dialog.findViewById(com.group_01.finalproject.R.id.dialogAdd) as Button
             // if button is clicked, close the custom dialog
             dialogAddButton.setOnClickListener{
-                val name = nameEdit.text.toString()
-                val ageText = ageEdit.text
+                val name = nameEdit?.text.toString()
+                val ageText = ageEdit?.text.toString()
                 val type = selectedType
                 if (name.isNotEmpty() && ageText.isNotEmpty() && type.isNotEmpty()) {
-                    val age = Integer.parseInt(ageText.toString())
-                    val currentTime: Date = Calendar.getInstance().getTime()
-                    var plantModel = PlantModel(-1, name, type, "healthy", indoorsSwitch.isChecked, age, currentTime)
+                    val age = Integer.parseInt(ageText)
+                    val currentTime: Date = Calendar.getInstance().time
+                    var plantModel = PlantModel(-1, name, type, "healthy", indoorsSwitch!!.isChecked, age, currentTime)
                     dbHelper.insertPlant(plantModel)
                 }
+                viewAdapter.notifyDataSetChanged()
                 dialog.dismiss()
             }
 

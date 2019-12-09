@@ -33,7 +33,7 @@ class NotificationService : Service() {
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         // map of plant to water frequency
-        val map = mapOf("Tomato" to 0, "Cactus" to 0 , "Peppers" to 0)
+        val map = mapOf("Tomato" to 2, "Cactus" to 5 , "Peppers" to 4)
 
         val plantsToWater = ArrayList<String>()
         for (plant in plants) {
@@ -149,7 +149,7 @@ class NotificationService : Service() {
 
     private fun checkTemperature(temperature: Double, notificationManager: NotificationManager) {
 
-        if (temperature < 90) { //TODO: change this to 50
+        if (temperature < 50) { //TODO: change this to 50
             // Create an Intent for the activity you want to start
             val resultIntent = Intent(this, MainActivity::class.java)
             // Create the TaskStackBuilder

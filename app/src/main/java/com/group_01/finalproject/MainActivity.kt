@@ -25,14 +25,11 @@ import com.group_01.finalproject.db.CareModel
 import com.group_01.finalproject.db.DBInterface
 import com.group_01.finalproject.db.PlantModel
 import com.group_01.finalproject.db.UserModel
-import com.group_01.finalproject.openweather.WeatherService
 import com.kwabenaberko.openweathermaplib.constants.Lang
 import com.kwabenaberko.openweathermaplib.constants.Units
 import com.kwabenaberko.openweathermaplib.implementation.OpenWeatherMapHelper
 import java.text.SimpleDateFormat
 import java.util.*
-
-
 
 
 class MainActivity : AppCompatActivity() {
@@ -133,7 +130,6 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-        startService(Intent(this, WeatherService::class.java))
         startService(Intent(this, NotificationService::class.java))
 
         val user:UserModel = dbHelper.getUser(1)
@@ -143,17 +139,6 @@ class MainActivity : AppCompatActivity() {
     fun isJobSchedulerRunning(context: Context): Boolean {
         val jobScheduler = context.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
         return jobScheduler.allPendingJobs.size > 0
-    }
-
-    fun startService() {
-        val intent = Intent(this, WeatherService::class.java)
-        startService(intent)
-
-    }
-
-    fun stopService() {
-        val intent = Intent(this, WeatherService::class.java)
-        stopService(intent)
     }
 
     fun getCurrentLocation() {
@@ -211,22 +196,13 @@ class MainActivity : AppCompatActivity() {
                                             permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
             REQUEST_PERMISSIONS_REQUEST_CODE -> {
-                // If request is cancelled, the result arrays are empty.
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-                    // Get location upon opening app
                     getCurrentLocation()
 
-                } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
                 }
                 return
             }
 
-            // Add other 'when' lines to check for other
-            // permissions this app might request.
             else -> {
                 // Ignore all other requests.
             }

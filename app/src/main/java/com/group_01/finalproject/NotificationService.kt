@@ -8,6 +8,12 @@ import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.group_01.finalproject.db.DBInterface
+import com.group_01.finalproject.db.UserModel
+import com.kwabenaberko.openweathermaplib.constants.Lang
+import com.kwabenaberko.openweathermaplib.constants.Units
+import com.kwabenaberko.openweathermaplib.implementation.OpenWeatherMapHelper
+import com.kwabenaberko.openweathermaplib.implementation.callbacks.CurrentWeatherCallback
+import com.kwabenaberko.openweathermaplib.models.currentweather.CurrentWeather
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -24,6 +30,33 @@ class NotificationService : Service() {
 
         // map of plant to water frequency
         val map = mapOf("Tomato" to 0, "Cactus" to 0 , "Peppers" to 0)
+
+        Log.d("### Service Test", "Service running")
+        val weatherHelper = OpenWeatherMapHelper(getString(R.string.OPEN_WEATHER_MAP_API_KEY))
+        weatherHelper.setUnits(Units.IMPERIAL)
+        weatherHelper.setLang(Lang.ENGLISH)
+
+        var user: UserModel = dbHelper.getUser(1)
+        var newUser: UserModel = UserModel(user.userId, user.name, user.points + 1, user.consistencyBadge, user.diversityBadge, user.photosBadge, user.greenThumbBadge, user.badgeOfBadges, user.creationDate, user.lat, user.long)
+        dbHelper.updateUser(newUser)
+        dbHelper.closeConnection()
+        weatherHelper.getCurrentWeatherByGeoCoordinates(user.lat, user.long, object :
+            CurrentWeatherCallback {
+            override fun onSuccess(currentWeather: CurrentWeather) {
+                Log.v(
+                    TAG,
+                    "Coordinates: " + currentWeather.coord.lat + ", " + currentWeather.coord.lon + "\n"
+                            + "Weather Description: " + currentWeather.weather[0].description + "\n"
+                            + "Temperature: " + currentWeather.main.tempMax + "\n"
+                            + "Wind Speed: " + currentWeather.wind.speed + "\n"
+                            + "City, Country: " + currentWeather.name + ", " + currentWeather.sys.country
+                )
+            }
+
+            override fun onFailure(throwable: Throwable) {
+                Log.v(TAG, throwable.message)
+            }
+        })
 
         val plantsToWater = ArrayList<String>()
         for (plant in plants) {

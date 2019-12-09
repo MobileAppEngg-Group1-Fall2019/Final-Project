@@ -69,39 +69,20 @@ class HomeFragment : Fragment() {
 
     // Create and add image view of badges to badges_layout using User db data.
     private fun createBadges() {
-        when (mUser?.consistencyBadge) { // CONSISTENCY BADGE  // Range: 0-5
-            1 -> addBadge(badgesConsistency, 0)
-            2 -> for (i in 0..1) { addBadge(badgesConsistency, i) }
-            3 -> for (i in 0..2) { addBadge(badgesConsistency, i) }
-            4 -> for (i in 0..3) { addBadge(badgesConsistency, i) }
-            5 -> for (i in 0..4) { addBadge(badgesConsistency, i) }
+        for(i in 0 until (mUser!!.consistencyBadge)) {  // CONSISTENCY BADGE  // Range: 0-5
+            addBadge(badgesConsistency, i)
         }
-        when (mUser?.diversityBadge) { // DIVERSITY BADGE   // Range: 0-6
-            1 -> addBadge(badgesDiversity, 0)
-            2 -> for (i in 0..1) { addBadge(badgesDiversity, i) }
-            3 -> for (i in 0..2) { addBadge(badgesDiversity, i) }
-            4 -> for (i in 0..3) { addBadge(badgesDiversity, i) }
-            5 -> for (i in 0..4) { addBadge(badgesDiversity, i) }
-            6 -> for (i in 0..5) { addBadge(badgesDiversity, i) }
+        for(i in 0 until mUser!!.diversityBadge) {  // DIVERSITY BADGE   // Range: 0-6
+            addBadge(badgesDiversity, i)
         }
-        when (mUser?.photosBadge) { // PHOTOGRAPHER BADGE   // Range: 0-5
-            1 -> addBadge(badgesPhotos, 0)
-            2 -> for (i in 0..1) { addBadge(badgesPhotos, i) }
-            3 -> for (i in 0..2) { addBadge(badgesPhotos, i) }
-            4 -> for (i in 0..3) { addBadge(badgesPhotos, i) }
-            5 -> for (i in 0..4) { addBadge(badgesPhotos, i) }
+        for(i in 0 until mUser!!.photosBadge) {  // PHOTOGRAPHER BADGE   // Range: 0-5
+            addBadge(badgesPhotos, i)
         }
-        when (mUser?.greenThumbBadge) { // GREEN THUMB BADGE   // Range: 0-5
-            1 -> addBadge(badgesGreenThumb, 0)
-            2 -> for (i in 0..1) { addBadge(badgesGreenThumb, i) }
-            3 -> for (i in 0..2) { addBadge(badgesGreenThumb, i) }
-            4 -> for (i in 0..3) { addBadge(badgesGreenThumb, i) }
-            5 -> for (i in 0..4) { addBadge(badgesGreenThumb, i) }
+        for(i in 0 until mUser!!.greenThumbBadge) {  // GREEN THUMB BADGE   // Range: 0-5
+            addBadge(badgesGreenThumb, i)
         }
-        when (mUser?.badgeOfBadges) { // BADGE OF BADGES   // Range: 0-3
-            1 -> addBadge(badgesOfBadges, 0)
-            2 -> for (i in 0..1) { addBadge(badgesOfBadges, i) }
-            3 -> for (i in 0..2) { addBadge(badgesOfBadges, i) }
+        for(i in 0 until mUser!!.badgeOfBadges) { // BADGE OF BADGES   // Range: 0-3
+            addBadge(badgesOfBadges, i)
         }
     }
 
@@ -121,11 +102,11 @@ class HomeFragment : Fragment() {
             )
 
             // Set TextViews for History Card.
-            card.card_name.text = plant.name
-            card.card_type.text = plant.type
+            card.card_name.text = "Name: ${plant.name}"
+            card.card_type.text = "Type: ${plant.type}"
             card.card_date.text = "${mDate[0]} ${mDate[1]}, ${mDate[2]}"
 
-            // This is ugly but deal with it!
+            // This is ugly but deal with it! No ternary operators :(
             card.card_bool.text = if (it.completed) "Watered: Yes" else "Watered: No"
 
             history_cards_layout.addView(card)
@@ -140,123 +121,27 @@ class HomeFragment : Fragment() {
         mImageView.setImageResource(type[index])
 
         // Sets the title and description for pop-up.
-        // To edit description strings, go to: 'res/values/strings.xml'
-        when (type) {
+        // To edit title and description strings, go to: 'res/values/strings.xml'
+        when(type) {
             badgesConsistency -> {
-                when (index) {
-                    0 -> {
-                        titleString = "Consistency Badge 1"
-                        descString = getString(R.string.badge_consistency_1)
-                    }
-                    1 -> {
-                        titleString = "Consistency Badge 10"
-                        descString = getString(R.string.badge_consistency_10)
-                    }
-                    2 -> {
-                        titleString = "Consistency Badge 100"
-                        descString = getString(R.string.badge_consistency_100)
-                    }
-                    3 -> {
-                        titleString = "Consistency Badge 1000"
-                        descString = getString(R.string.badge_consistency_1000)
-                    }
-                    4 -> {
-                        titleString = "Consistency Badge 10000"
-                        descString = getString(R.string.badge_consistency_10000)
-                    }
-                }
+                titleString = resources.getStringArray(R.array.badge_consistency_title)[index]
+                descString = resources.getStringArray(R.array.badge_consistency_desc)[index]
             }
             badgesDiversity -> {
-                when (index) {
-                    0 -> {
-                        titleString = "Diversity Badge 2"
-                        descString = getString(R.string.badge_diversity_2)
-                    }
-                    1 -> {
-                        titleString = "Diversity Badge 4"
-                        descString = getString(R.string.badge_diversity_4)
-                    }
-                    2 -> {
-                        titleString = "Diversity Badge 6"
-                        descString = getString(R.string.badge_diversity_6)
-                    }
-                    3 -> {
-                        titleString = "Diversity Badge 8"
-                        descString = getString(R.string.badge_diversity_8)
-                    }
-                    4 -> {
-                        titleString = "Diversity Badge 10"
-                        descString = getString(R.string.badge_diversity_10)
-                    }
-                    5 -> {
-                        titleString = "Diversity Badge 12"
-                        descString = getString(R.string.badge_diversity_12)
-                    }
-                }
+                titleString = resources.getStringArray(R.array.badge_diversity_title)[index]
+                descString = resources.getStringArray(R.array.badge_diversity_desc)[index]
             }
             badgesPhotos -> {
-                when (index) {
-                    0 -> {
-                        titleString = "Photographer Badge 1"
-                        descString = getString(R.string.badge_photography_1)
-                    }
-                    1 -> {
-                        titleString = "Photographer Badge 10"
-                        descString = getString(R.string.badge_photography_10)
-                    }
-                    2 -> {
-                        titleString = "Photographer Badge 100"
-                        descString = getString(R.string.badge_photography_100)
-                    }
-                    3 -> {
-                        titleString = "Photographer Badge 1000"
-                        descString = getString(R.string.badge_photography_1000)
-                    }
-                    4 -> {
-                        titleString = "Photographer Badge 10000"
-                        descString = getString(R.string.badge_photography_10000)
-                    }
-                }
+                titleString = resources.getStringArray(R.array.badge_photographer_title)[index]
+                descString = resources.getStringArray(R.array.badge_photographer_desc)[index]
             }
             badgesGreenThumb -> {
-                when (index) {
-                    0 -> {
-                        titleString = "Green Thumb Badge 1"
-                        descString = getString(R.string.badge_greenThumb_1)
-                    }
-                    1 -> {
-                        titleString = "Green Thumb Badge 10"
-                        descString = getString(R.string.badge_greenThumb_10)
-                    }
-                    2 -> {
-                        titleString = "Green Thumb Badge 100"
-                        descString = getString(R.string.badge_greenThumb_100)
-                    }
-                    3 -> {
-                        titleString = "Green Thumb Badge 1000"
-                        descString = getString(R.string.badge_greenThumb_1000)
-                    }
-                    4 -> {
-                        titleString = "Green Thumb Badge 10000"
-                        descString = getString(R.string.badge_greenThumb_10000)
-                    }
-                }
+                titleString = resources.getStringArray(R.array.badge_greenThumb_title)[index]
+                descString = resources.getStringArray(R.array.badge_greenThumb_desc)[index]
             }
             badgesOfBadges -> {
-                when (index) {
-                    0 -> {
-                        titleString = "Badge of Badges 5"
-                        descString = getString(R.string.badge_ofBadges_5)
-                    }
-                    1 -> {
-                        titleString = "Badge of Badges 10"
-                        descString = getString(R.string.badge_ofBadges_10)
-                    }
-                    2 -> {
-                        titleString = "Badge of Badges 20"
-                        descString = getString(R.string.badge_ofBadges_20)
-                    }
-                }
+                titleString = resources.getStringArray(R.array.badge_ofBadges_title)[index]
+                descString = resources.getStringArray(R.array.badge_ofBadges_desc)[index]
             }
         }
 
@@ -298,7 +183,9 @@ class HomeFragment : Fragment() {
                 consistAmt++
             }
         }
-        val consistency = if(consistAmt != 0.0) floor(log10(consistAmt)).toInt()+1 else 0
+        var consistency = if(consistAmt != 0.0) floor(log10(consistAmt)).toInt()+1 else 0
+        // Prevent User from losing their consistency badges when their streak has ended.
+        consistency = if(curUser.consistencyBadge <= consistency) consistency else curUser.consistencyBadge
 
         // Calculates Diversity Badge
         val diversity = dbHelper.getAllPlants().distinctBy { it.type }.size / 2

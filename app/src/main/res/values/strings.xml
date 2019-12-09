@@ -15,34 +15,88 @@
     </string-array>
 
 
-    <!--DESCRIPTIONS FOR BADGE POP-UPS-->
-    <string name="badge_consistency_1">You have watered your plants for the first time! Keep it up!</string>
-    <string name="badge_consistency_10">You have watered your plants 10 times in a row!</string>
-    <string name="badge_consistency_100">You have watered your plants 100 times in a row!</string>
-    <string name="badge_consistency_1000">You have watered your plants 1000 times in a row!</string>
-    <string name="badge_consistency_10000">You have watered your plants 10000 times in a row! Now that\'s dedication!</string>
 
-    <string name="badge_diversity_2">You own 2 unique types of plants! Diversify your garden!</string>
-    <string name="badge_diversity_4">You own 4 unique types of plants!</string>
-    <string name="badge_diversity_6">You own 6 unique types of plants!</string>
-    <string name="badge_diversity_8">You own 8 unique types of plants!</string>
-    <string name="badge_diversity_10">You own 10 unique types of plants!</string>
-    <string name="badge_diversity_12">You own 12 unique types of plants! So much diversity!</string>
+    <!--Titles for Consistency Badges-->
+    <string-array name="badge_consistency_title">
+        <item>Consistency Badge 1</item>
+        <item>Consistency Badge 10</item>
+        <item>Consistency Badge 100</item>
+        <item>Consistency Badge 1000</item>
+        <item>Consistency Badge 10000</item>
+    </string-array>
+    <!--Descriptions for Consistency Badges-->
+    <string-array name="badge_consistency_desc">
+        <item>You have started a consistency streak! Keep it up!</item>
+        <item>You have watered your plants 10 times in a row!</item>
+        <item>You have watered your plants 100 times in a row!</item>
+        <item>You have watered your plants 1000 times in a row!</item>
+        <item>You have watered your plants 10000 times in a row! Now that\'s dedication!</item>
+    </string-array>
 
-    <string name="badge_photography_1">You have uploaded your first photo! Take more pictures!</string>
-    <string name="badge_photography_10">You have uploaded your 10th photo!</string>
-    <string name="badge_photography_100">You have uploaded your 100th photo!</string>
-    <string name="badge_photography_1000">You have uploaded your 1000th photo!</string>
-    <string name="badge_photography_10000">You have uploaded your 10000th photo! You\'re a plant photography expert!</string>
+    <!--Titles for Diversity Badges-->
+    <string-array name="badge_diversity_title">
+        <item>Diversity Badge 2</item>
+        <item>Diversity Badge 4</item>
+        <item>Diversity Badge 6</item>
+        <item>Diversity Badge 8</item>
+        <item>Diversity Badge 10</item>
+        <item>Diversity Badge 12</item>
+    </string-array>
+    <!--Descriptions for Diversity Badges-->
+    <string-array name="badge_diversity_desc">
+        <item>You own 2 unique types of plants! Diversify your garden!</item>
+        <item>You own 4 unique types of plants!</item>
+        <item>You own 6 unique types of plants!</item>
+        <item>You own 8 unique types of plants!</item>
+        <item>You own 10 unique types of plants!</item>
+        <item>You own 12 unique types of plants! So much diversity!</item>
+    </string-array>
 
-    <string name="badge_greenThumb_1">You have a green thumb! You cared for your plants for the first time!</string>
-    <string name="badge_greenThumb_10">You cared for your plants for a total of 10 times!</string>
-    <string name="badge_greenThumb_100">You cared for your plants for a total of 100 times!</string>
-    <string name="badge_greenThumb_1000">You cared for your plants for a total of 1000 times!</string>
-    <string name="badge_greenThumb_10000">You cared for your plants for a total of 10000 times!</string>
+    <!--Titles for Photographer Badges-->
+    <string-array name="badge_photographer_title">
+        <item>Photographer Badge 1</item>
+        <item>Photographer Badge 10</item>
+        <item>Photographer Badge 100</item>
+        <item>Photographer Badge 1000</item>
+        <item>Photographer Badge 10000</item>
+    </string-array>
+    <!--Descriptions for Photographer Badges-->
+    <string-array name="badge_photographer_desc">
+        <item>You have uploaded your first photo! Take and upload more pictures!</item>
+        <item>You have uploaded your 10th photo!</item>
+        <item>You have uploaded your 100th photo!</item>
+        <item>You have uploaded your 1000th photo!</item>
+        <item>You have uploaded your 10000th photo! You\'re a plant photography expert!</item>
+    </string-array>
 
-    <string name="badge_ofBadges_5">A badge collector in the making! You have collected a total of 5 other badges!</string>
-    <string name="badge_ofBadges_10">You have collected a total of 10 other badges!</string>
-    <string name="badge_ofBadges_20">You have collected a total of 20 other badges! Finish that badge collection!</string>
+    <!--Titles for Photographer Badges-->
+    <string-array name="badge_greenThumb_title">
+        <item>Green Thumb Badge 1</item>
+        <item>Green Thumb Badge 10</item>
+        <item>Green Thumb Badge 100</item>
+        <item>Green Thumb Badge 1000</item>
+        <item>Green Thumb Badge 10000</item>
+    </string-array>
+    <!--Descriptions for Green Thumb Badges-->
+    <string-array name="badge_greenThumb_desc">
+        <item>You have a green thumb! You cared for your plants for the first time!</item>
+        <item>You cared for your plants for a total of 10 times!</item>
+        <item>You cared for your plants for a total of 100 times!</item>
+        <item>You cared for your plants for a total of 1000 times!</item>
+        <item>You cared for your plants for a total of 10000 times! Gardening extraordinaire!</item>
+    </string-array>
+
+    <!--Titles for Badge of Badges-->
+    <string-array name="badge_ofBadges_title">
+        <item>Badge of Badges 5</item>
+        <item>Badge of Badges 10</item>
+        <item>Badge of Badges 20</item>
+    </string-array>
+    <!--Descriptions for Badge of Badges-->
+    <string-array name="badge_ofBadges_desc">
+        <item>A badge collector in the making! You have collected a total of 5 other badges!</item>
+        <item>You have collected a total of 10 other badges!</item>
+        <item>You have collected a total of 20 other badges! What a collection!</item>
+    </string-array>
 
 </resources>

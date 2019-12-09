@@ -82,12 +82,12 @@ class MainActivity : AppCompatActivity() {
             val initUser = UserModel(
                 1,
                 "user_name",
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
+                99999,
+                5,
+                6,
+                5,
+                5,
+                3,
                 currentTime,
                 0.0,
                 0.0

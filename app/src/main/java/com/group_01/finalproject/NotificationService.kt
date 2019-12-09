@@ -11,6 +11,7 @@ import com.group_01.finalproject.db.DBInterface
 import java.util.*
 import kotlin.collections.ArrayList
 
+
 class NotificationService : Service() {
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
 
@@ -68,6 +69,9 @@ class NotificationService : Service() {
                 .setContentText("Water: $plantsToWater")
                 .setContentIntent(resultPendingIntent)
                 .build()
+
+            // Removes notification after it is clicked.
+            notification.flags = notification.flags or Notification.FLAG_AUTO_CANCEL
 
             val notificationManager =
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

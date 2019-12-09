@@ -84,7 +84,7 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
         values.put(DBContract.UserEntry.BADGE_OF_BADGES, user.badgeOfBadges)
         values.put(DBContract.UserEntry.LAT, user.lat)
         values.put(DBContract.UserEntry.LONG, user.long)
-        db.update(DBContract.UserEntry.TABLE_NAME, values, "_id = ?", arrayOf(user.userId.toString()))
+        db.update(DBContract.UserEntry.TABLE_NAME, values, "${DBContract.UserEntry.USER_ID} = ?", arrayOf(user.userId.toString()))
         return true
     }
 

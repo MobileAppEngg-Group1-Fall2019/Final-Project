@@ -54,8 +54,8 @@ class NotificationService : Service() {
         } else {
             Log.i(TAG, "Plants to be watered: $plantsToWater")
             // send notification
-            val notification = NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.ic_notifications_black_24dp)
+            val notification = NotificationCompat.Builder(this, "channel_id")
+                .setSmallIcon(R.drawable.notification_flower)
                 .setContentTitle("Time to water your plants!")
                 .setContentText("Water: $plantsToWater")
                 .build()

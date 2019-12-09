@@ -13,9 +13,11 @@
         android:roundIcon="@mipmap/logo_forget_me_not_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <service android:name=".NotificationService" />
+
         <service android:name=".openweather.WeatherService" />
 
-        <service android:name=".openweather.WeatherIntentService" />
         <receiver android:name=".openweather.ServiceReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

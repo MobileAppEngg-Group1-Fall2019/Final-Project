@@ -21,8 +21,6 @@ import android.app.AlarmManager
 import android.os.IBinder
 
 
-
-
 class WeatherService : Service() {
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         // Query the database and show alarm if it applies

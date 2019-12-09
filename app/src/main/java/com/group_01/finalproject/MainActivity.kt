@@ -1,12 +1,16 @@
 package com.group_01.finalproject
 
 import android.Manifest
+import android.app.job.JobScheduler
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Criteria
 import android.location.Location
+import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
+import android.os.Looper
 import android.os.StrictMode
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -17,20 +21,16 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.group_01.finalproject.db.CareModel
 import com.group_01.finalproject.db.DBInterface
+import com.group_01.finalproject.db.PlantModel
+import com.group_01.finalproject.db.UserModel
+import com.group_01.finalproject.openweather.WeatherService
 import com.kwabenaberko.openweathermaplib.constants.Lang
 import com.kwabenaberko.openweathermaplib.constants.Units
 import com.kwabenaberko.openweathermaplib.implementation.OpenWeatherMapHelper
 import java.text.SimpleDateFormat
 import java.util.*
-import android.location.LocationListener
-import android.os.Looper
-import android.location.Criteria
-import com.group_01.finalproject.db.CareModel
-import com.group_01.finalproject.db.PlantModel
-import com.group_01.finalproject.db.UserModel
-import com.group_01.finalproject.openweather.WeatherService
-import android.app.job.JobScheduler
 
 
 
@@ -134,6 +134,7 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
         startService(Intent(this, WeatherService::class.java))
+        startService(Intent(this, NotificationService::class.java))
 
         val user:UserModel = dbHelper.getUser(1)
         Log.d("#### Service test", "points: " + user.points)

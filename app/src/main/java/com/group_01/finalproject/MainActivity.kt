@@ -41,8 +41,7 @@ class MainActivity : AppCompatActivity() {
     private var longitude: Double = 0.0
     private var latitude: Double = 0.0
     private val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_NETWORK_STATE)
-
-    val PERMISSIONS_LOCATION = 1
+    private val REQUEST_PERMISSIONS_REQUEST_CODE = 34
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -104,8 +103,17 @@ class MainActivity : AppCompatActivity() {
             // TODO :- ^^^^^ TEST ONLY, REMOVE FOR FINAL BUILD ^^^^^
         }
 
-        ActivityCompat.requestPermissions(this, permissions, PERMISSIONS_LOCATION)
-
+        // Checks if permissions are granted.
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NETWORK_STATE) != PackageManager.PERMISSION_GRANTED) {
+            // If permission not granted, request permissions
+            ActivityCompat.requestPermissions(
+                this,
+                permissions,
+                REQUEST_PERMISSIONS_REQUEST_CODE
+            )
+        }
 
         Intent(this, WeatherIntentService::class.java).also { intent ->
             startService(intent)
@@ -179,7 +187,7 @@ class MainActivity : AppCompatActivity() {
     override fun onRequestPermissionsResult(requestCode: Int,
                                             permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
-            PERMISSIONS_LOCATION -> {
+            REQUEST_PERMISSIONS_REQUEST_CODE -> {
                 // If request is cancelled, the result arrays are empty.
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     // permission was granted, yay! Do the

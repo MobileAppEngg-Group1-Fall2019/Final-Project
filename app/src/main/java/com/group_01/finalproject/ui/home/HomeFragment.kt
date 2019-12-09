@@ -14,9 +14,13 @@ import com.group_01.finalproject.R
 import com.group_01.finalproject.db.CareModel
 import com.group_01.finalproject.db.DBInterface
 import com.group_01.finalproject.db.UserModel
+import com.group_01.finalproject.db.db
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.history_card.view.*
 import java.util.*
+import kotlin.math.floor
+import kotlin.math.log10
+import kotlin.math.log2
 
 class HomeFragment : Fragment() {
 
@@ -42,6 +46,9 @@ class HomeFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         dbHelper = DBInterface(context = this.context!!)
+
+        // Updates user data with current db information for points & badges.
+        updateUser()
 
         // Get User & Care data from database
         mUser = dbHelper.getUser(1) // Only one User per device.
@@ -105,13 +112,14 @@ class HomeFragment : Fragment() {
         mCare?.forEach {
             val layoutInflater = LayoutInflater.from(context)
             val plant = dbHelper.getPlant(it.plantID)
-<<<<<<< HEAD
             val mDate = formatDate(it.date) // Date format: M/D/Y
-=======
-            val year = it.date.year
-            val month = monthToString(it.date.month)
-            val day = it.date.day.toString()
->>>>>>> Setup intent service structure
+//<<<<<<< HEAD
+//
+//=======
+//            val year = it.date.year
+//            val month = monthToString(it.date.month)
+//            val day = it.date.day.toString()
+//>>>>>>> Setup intent service structure
 
             val card: View = layoutInflater.inflate( // Inflate History Card Layout.
                 R.layout.history_card,
@@ -273,6 +281,68 @@ class HomeFragment : Fragment() {
         }
 
         badges_layout.addView(mImageView) // Add to badges holder view.
+    }
+
+    // Calculates the current number of points and badges and update the User in database.
+    private fun updateUser() {
+        val curUser = dbHelper.getUser(1)
+        var numOfWatering = 0
+        dbHelper.getAllCare().forEach {
+            if(it.completed) {
+                numOfWatering++
+            }
+        }
+
+        var consistency = 0.0
+        val reverseListOfCares = dbHelper.getAllCare()
+        reverseListOfCares.reverse()
+
+        run loop@{
+            reverseListOfCares.forEach{
+                Log.d("REVERSE LIST OF CARES", "${it.completed}")
+                if (!it.completed)
+                    return@loop
+                consistency++
+            }
+        }
+
+        val consistencyB = if(consistency != 0.0) floor(log10(consistency)).toInt()+1 else 0
+
+        val diversity = dbHelper.getAllPlants().distinct().size / 2
+
+        val photoAmt = dbHelper.getAllImages().size.toDouble()
+        val photographer = if(photoAmt != 0.0) floor(log10(photoAmt)).toInt()+1 else 0
+
+        val greenAmt = numOfWatering.toDouble()
+        val greenThumb = if(greenAmt != 0.0) floor(log10(greenAmt)).toInt()+1 else 0
+
+        val total = consistencyB + diversity + photographer + greenThumb
+
+        val ofBadges = floor(log2(total / 5.0)).toInt()+1
+
+        val points = numOfWatering * 10
+
+
+        Log.d("DAN", "$consistencyB, $diversity, $photographer, $greenThumb, $ofBadges, $points")
+
+        val newUser = UserModel(
+            curUser.userId,
+            curUser.name,
+
+            // New data to be updated.
+            points,
+            consistencyB,
+            diversity,
+            photographer,
+            greenThumb,
+            ofBadges,
+
+            curUser.creationDate,
+            curUser.lat,
+            curUser.long
+        )
+
+        dbHelper.updateUser(newUser)
     }
 
     // Changes numerical month value from Date to equivalent string name.

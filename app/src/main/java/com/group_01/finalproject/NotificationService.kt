@@ -1,10 +1,7 @@
 package com.group_01.finalproject
 
 
-import android.app.AlarmManager
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.app.Service
+import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
@@ -54,10 +51,22 @@ class NotificationService : Service() {
         } else {
             Log.i(TAG, "Plants to be watered: $plantsToWater")
             // send notification
+
+            // Create an Intent for the activity you want to start
+            val resultIntent = Intent(this, MainActivity::class.java)
+            // Create the TaskStackBuilder
+            val resultPendingIntent: PendingIntent? = TaskStackBuilder.create(this).run {
+                // Add the intent, which inflates the back stack
+                addNextIntentWithParentStack(resultIntent)
+                // Get the PendingIntent containing the entire back stack
+                getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
+            }
+
             val notification = NotificationCompat.Builder(this, "channel_id")
                 .setSmallIcon(R.drawable.notification_flower)
                 .setContentTitle("Time to water your plants!")
                 .setContentText("Water: $plantsToWater")
+                .setContentIntent(resultPendingIntent)
                 .build()
 
             val notificationManager =

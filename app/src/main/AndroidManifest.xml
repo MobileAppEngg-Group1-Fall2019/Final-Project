@@ -34,7 +34,8 @@
         </activity>
         <activity
             android:label="Main"
-            android:name=".MainActivity"/>
+            android:name=".MainActivity"
+            android:parentActivityName=".SplashActivity"/>
     </application>
 
 </manifest>

@@ -14,11 +14,11 @@ import com.kwabenaberko.openweathermaplib.constants.Units
 import com.kwabenaberko.openweathermaplib.implementation.OpenWeatherMapHelper
 import com.kwabenaberko.openweathermaplib.models.currentweather.CurrentWeather
 import com.kwabenaberko.openweathermaplib.implementation.callbacks.CurrentWeatherCallback
-import android.R
 import android.app.job.JobParameters
 import android.app.AlarmManager.RTC_WAKEUP
 import android.app.AlarmManager
 import android.os.IBinder
+import com.group_01.finalproject.R
 
 
 class WeatherService : Service() {
@@ -26,6 +26,9 @@ class WeatherService : Service() {
         // Query the database and show alarm if it applies
         // For actual api stuff, copy over weather intent service functionality - this is just here to show you it works
         Log.d("### Service Test", "Service running")
+        val weatherHelper = OpenWeatherMapHelper(getString(R.string.OPEN_WEATHER_MAP_API_KEY))
+        weatherHelper.setUnits(Units.IMPERIAL)
+        weatherHelper.setLang(Lang.ENGLISH)
         var dbHelper = DBInterface(this)
         // val weatherHelper = OpenWeatherMapHelper(getString(R.string.OPEN_WEATHER_MAP_API_KEY))
         // weatherHelper.setUnits(Units.IMPERIAL)
@@ -35,6 +38,23 @@ class WeatherService : Service() {
         var newUser: UserModel = UserModel(user.userId, user.name, user.points + 1, user.consistencyBadge, user.diversityBadge, user.photosBadge, user.greenThumbBadge, user.badgeOfBadges, user.creationDate, user.lat, user.long)
         dbHelper.updateUser(newUser)
         dbHelper.closeConnection()
+        weatherHelper.getCurrentWeatherByGeoCoordinates(user.lat, user.long, object : CurrentWeatherCallback {
+            override fun onSuccess(currentWeather: CurrentWeather) {
+                Log.v(
+                    TAG,
+                    "Coordinates: " + currentWeather.coord.lat + ", " + currentWeather.coord.lon + "\n"
+                            + "Weather Description: " + currentWeather.weather[0].description + "\n"
+                            + "Temperature: " + currentWeather.main.tempMax + "\n"
+                            + "Wind Speed: " + currentWeather.wind.speed + "\n"
+                            + "City, Country: " + currentWeather.name + ", " + currentWeather.sys.country
+                )
+            }
+
+            override fun onFailure(throwable: Throwable) {
+                Log.v(TAG, throwable.message)
+            }
+        })
+
         // I don't want this service to stay in memory, so I stop it
         // immediately after doing what I wanted it to do.
         stopSelf()

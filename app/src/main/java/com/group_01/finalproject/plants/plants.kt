@@ -10,7 +10,7 @@ object Plants {
 
     }
 
-    class Succulent {
+    class Cactus {
         companion object {
             const val waterFreq = 5
             const val instructions = ""

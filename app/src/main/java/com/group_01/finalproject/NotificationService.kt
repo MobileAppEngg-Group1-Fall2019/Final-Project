@@ -21,7 +21,7 @@ class NotificationService : Service() {
         var plants = dbHelper.getAllPlants()
 
         // map of plant to water frequency
-        val map = mapOf("Tomato" to 2, "Succulent" to 5 , "Peppers" to 4)
+        val map = mapOf("Tomato" to 2, "Cactus" to 5 , "Peppers" to 4)
 
         val plantsToWater = ArrayList<String>()
         for (plant in plants) {

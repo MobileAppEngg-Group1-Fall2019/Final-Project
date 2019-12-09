@@ -83,17 +83,16 @@ class MainActivity : AppCompatActivity() {
             val initUser = UserModel(
                 1,
                 "user_name",
-                6543321,
-                5,
-                6,
-                5,
-                5,
-                3,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
                 currentTime,
-                12.123123,
-                13.12312312
+                0.0,
+                0.0
             )
-
 
             dbHelper.insertUser(initUser) // Insert User into database.
 

@@ -113,13 +113,6 @@ class HomeFragment : Fragment() {
             val plant = dbHelper.getPlant(it.plantID)
 
             val mDate = formatDate(it.date) // Date format: M/D/Y
-//<<<<<<< HEAD
-//
-//=======
-//            val year = it.date.year
-//            val month = monthToString(it.date.month)
-//            val day = it.date.day.toString()
-//>>>>>>> Setup intent service structure
 
             val card: View = layoutInflater.inflate( // Inflate History Card Layout.
                 R.layout.history_card,
@@ -286,44 +279,45 @@ class HomeFragment : Fragment() {
     // Calculates the current number of points and badges and update the User in database.
     private fun updateUser() {
         val curUser = dbHelper.getUser(1)
+
+        // Calculates Times Watered
         var numOfWatering = 0
         dbHelper.getAllCare().forEach {
-            if(it.completed) {
+            if(it.completed)
                 numOfWatering++
-            }
         }
 
-        var consistency = 0.0
+        // Calculates Consistency Badge
+        var consistAmt = 0.0
         val reverseListOfCares = dbHelper.getAllCare()
-        reverseListOfCares.reverse()
-
+        reverseListOfCares.reverse() // Reverses the list
         run loop@{
             reverseListOfCares.forEach{
-                Log.d("REVERSE LIST OF CARES", "${it.completed}")
                 if (!it.completed)
-                    return@loop
-                consistency++
+                    return@loop // Breaks out of forEach loop if watering streak ended.
+                consistAmt++
             }
         }
+        val consistency = if(consistAmt != 0.0) floor(log10(consistAmt)).toInt()+1 else 0
 
-        val consistencyB = if(consistency != 0.0) floor(log10(consistency)).toInt()+1 else 0
+        // Calculates Diversity Badge
+        val diversity = dbHelper.getAllPlants().distinctBy { it.type }.size / 2
 
-        val diversity = dbHelper.getAllPlants().distinct().size / 2
-
+        // Calculates Photographer Badge
         val photoAmt = dbHelper.getAllImages().size.toDouble()
         val photographer = if(photoAmt != 0.0) floor(log10(photoAmt)).toInt()+1 else 0
 
+        // Calculates Green Thumb Badge
         val greenAmt = numOfWatering.toDouble()
         val greenThumb = if(greenAmt != 0.0) floor(log10(greenAmt)).toInt()+1 else 0
 
-        val total = consistencyB + diversity + photographer + greenThumb
+        // Calculates Badge of Badges
+        val total = consistency + diversity + photographer + greenThumb
+        Log.d("TOTAL BADGES","$total")
+        val ofBadges = if(total >= 5) floor(log2(total / 5.0)).toInt()+1 else 0
 
-        val ofBadges = floor(log2(total / 5.0)).toInt()+1
-
-        val points = numOfWatering * 10
-
-
-        Log.d("DAN", "$consistencyB, $diversity, $photographer, $greenThumb, $ofBadges, $points")
+        // Calculates Points
+        val points = (numOfWatering * 123) + (total * 1234)
 
         val newUser = UserModel(
             curUser.userId,
@@ -331,7 +325,7 @@ class HomeFragment : Fragment() {
 
             // New data to be updated.
             points,
-            consistencyB,
+            consistency,
             diversity,
             photographer,
             greenThumb,
@@ -342,6 +336,7 @@ class HomeFragment : Fragment() {
             curUser.long
         )
 
+        // Update User in database.
         dbHelper.updateUser(newUser)
     }
 

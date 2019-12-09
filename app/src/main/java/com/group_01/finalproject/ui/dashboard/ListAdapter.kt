@@ -63,12 +63,16 @@ class ViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
 
     fun bind(plant: PlantModel) {
         nameTypeView?.text = plant.name + ", " + plant.type
-        if (plant.indoor) {
-            locationAgeView?.text = "indoors, " + plant.age + " weeks old"
-        } else {
-            locationAgeView?.text = "outdoors, " + plant.age + " weeks old"
+        var weekString = "weeks"
+        if (plant.age == 1) {
+            weekString = "week"
         }
-        waterView?.text = "last watered on " + plant.lastCare.toString()
+        if (plant.indoor) {
+            locationAgeView?.text = "Location: indoors\nAge: " + plant.age + " $weekString old"
+        } else {
+            locationAgeView?.text = "Location: outdoors\nAge: " + plant.age + " $weekString old"
+        }
+        waterView?.text = "Last watered on: " + plant.lastCare.toLocaleString()
 
         var imageList = dbHelper.getPlantImages(plant.plantId)
         if (imageList.isNotEmpty()) {

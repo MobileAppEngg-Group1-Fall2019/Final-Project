@@ -99,6 +99,7 @@ class DashboardFragment : Fragment() {
                     val currentTime: Date = Calendar.getInstance().time
                     var plantModel = PlantModel(-1, name, type, "healthy", indoorsSwitch!!.isChecked, age, currentTime)
                     dbHelper.insertPlant(plantModel)
+                    plantList.add(plantModel)
                 }
                 viewAdapter.notifyDataSetChanged()
                 dialog.dismiss()

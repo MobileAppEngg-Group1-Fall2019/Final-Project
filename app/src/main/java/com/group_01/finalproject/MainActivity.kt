@@ -115,9 +115,7 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
-        Intent(this, WeatherIntentService::class.java).also { intent ->
-            startService(intent)
-        }
+        startService()
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
 
@@ -131,6 +129,17 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+    }
+
+    fun startService() {
+        val intent = Intent(this, WeatherService::class.java)
+        startService(intent)
+
+    }
+
+    fun stopService() {
+        val intent = Intent(this, WeatherService::class.java)
+        stopService(intent)
     }
 
     fun getCurrentLocation() {

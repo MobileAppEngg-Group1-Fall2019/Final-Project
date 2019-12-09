@@ -88,6 +88,21 @@ class db(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
         return true
     }
 
+    @Throws(SQLiteConstraintException::class)
+    fun updatePlant(plant: PlantModel): Boolean {
+        val db = this.writableDatabase
+        val values = ContentValues()
+        values.put(DBContract.PlantEntry.NAME, plant.name)
+        values.put(DBContract.PlantEntry.TYPE, plant.type)
+        values.put(DBContract.PlantEntry.STATUS, plant.status)
+        values.put(DBContract.PlantEntry.INDOOR, plant.indoor)
+        values.put(DBContract.PlantEntry.AGE, plant.age)
+        values.put(DBContract.PlantEntry.LASTCARE, dateFormatter.format(plant.lastCare))
+
+        db.update(DBContract.PlantEntry.TABLE_NAME, values, "${DBContract.PlantEntry.PLANT_ID} = ?", arrayOf(plant.plantId.toString()))
+        return true
+    }
+
     fun readUser(userId: Long): ArrayList<UserModel> {
         val users = ArrayList<UserModel>()
         val db = writableDatabase

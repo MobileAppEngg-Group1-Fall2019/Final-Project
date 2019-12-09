@@ -1,6 +1,10 @@
 package com.group_01.finalproject
 
+import android.app.AlarmManager
 import android.app.IntentService
+import android.app.PendingIntent
+import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.icu.util.ULocale.getCountry
@@ -11,8 +15,77 @@ import com.kwabenaberko.openweathermaplib.constants.Units
 import com.kwabenaberko.openweathermaplib.implementation.OpenWeatherMapHelper
 import com.kwabenaberko.openweathermaplib.models.currentweather.CurrentWeather
 import com.kwabenaberko.openweathermaplib.implementation.callbacks.CurrentWeatherCallback
+import android.os.IBinder
+import android.os.SystemClock
 
 
+class WeatherService : Service {
+    private lateinit var alarmIntent: PendingIntent
+    var counter = 0
+
+    constructor(applicationContext: Context) : super() {
+
+        Log.i("SERVICE", "hService started")
+    }
+
+    constructor() {}
+
+    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+        super.onStartCommand(intent, flags, startId)
+
+        //instantiate your variables here
+
+        //i call my startUpload method here to doing the task assigned to it
+
+        startUpload()
+
+        return START_STICKY
+    }
+
+
+    fun startUpload() {
+
+        //call the method with your logic here
+
+        //mine is a sample to print a log after every x seconds
+
+        initializeTimerTask()
+
+    }
+
+    /**
+     * it sets the timer to print the counter every x seconds
+     */
+    fun initializeTimerTask() {
+        // timerTask = new TimerTask() {
+        var alarmMgr: AlarmManager? = null
+        alarmMgr?.setInexactRepeating(
+            AlarmManager.ELAPSED_REALTIME_WAKEUP,
+            SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_HALF_HOUR,
+            AlarmManager.INTERVAL_HALF_HOUR,
+            alarmIntent
+        )
+
+
+        //we can print it on the logs as below
+        Log.i("in timer", "in timer ++++  " + counter++)
+
+        //or use the print statement as below
+        println("Timer print " + counter++)
+
+    }
+
+    override fun onBind(intent: Intent): IBinder? {
+        return null
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        stopSelf()
+    }
+
+}
 
 class WeatherIntentService : IntentService("WeatherIntentService") {
 

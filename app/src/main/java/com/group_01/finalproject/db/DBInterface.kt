@@ -17,6 +17,10 @@ class DBInterface(context: Context) {
         return dbHelper.insertPlant(plant)
     }
 
+    fun updatePlant(plant: PlantModel):  Boolean {
+        return dbHelper.updatePlant(plant)
+    }
+
     fun insertImage(image: ImageModel): Long {
         return dbHelper.insertImage(image)
     }

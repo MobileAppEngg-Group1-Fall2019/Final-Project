@@ -29,36 +29,11 @@ class NotificationService : Service() {
 
         var plants = dbHelper.getAllPlants()
 
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
         // map of plant to water frequency
         val map = mapOf("Tomato" to 0, "Cactus" to 0 , "Peppers" to 0)
-
-        Log.d("### Service Test", "Service running")
-        val weatherHelper = OpenWeatherMapHelper(getString(R.string.OPEN_WEATHER_MAP_API_KEY))
-        weatherHelper.setUnits(Units.IMPERIAL)
-        weatherHelper.setLang(Lang.ENGLISH)
-
-        var user: UserModel = dbHelper.getUser(1)
-        var newUser: UserModel = UserModel(user.userId, user.name, user.points + 1, user.consistencyBadge, user.diversityBadge, user.photosBadge, user.greenThumbBadge, user.badgeOfBadges, user.creationDate, user.lat, user.long)
-        dbHelper.updateUser(newUser)
-        weatherHelper.getCurrentWeatherByGeoCoordinates(user.lat, user.long, object :
-            CurrentWeatherCallback {
-            override fun onSuccess(currentWeather: CurrentWeather) {
-                Log.v(
-                    TAG,
-                    "Coordinates: " + currentWeather.coord.lat + ", " + currentWeather.coord.lon + "\n"
-                            + "Weather Description: " + currentWeather.weather[0].description + "\n"
-                            + "Temperature: " + currentWeather.main.tempMax + "\n"
-                            + "Wind Speed: " + currentWeather.wind.speed + "\n"
-                            + "City, Country: " + currentWeather.name + ", " + currentWeather.sys.country
-                )
-
-                checkTemperature(currentWeather.main.tempMax)
-            }
-
-            override fun onFailure(throwable: Throwable) {
-                Log.v(TAG, throwable.message)
-            }
-        })
 
         val plantsToWater = ArrayList<String>()
         for (plant in plants) {
@@ -108,11 +83,37 @@ class NotificationService : Service() {
             // Removes notification after it is clicked.
             notification.flags = notification.flags or Notification.FLAG_AUTO_CANCEL
 
-            val notificationManager =
-                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
             notificationManager.notify(0, notification)
         }
+
+
+        Log.d("### Service Test", "Service running")
+        val weatherHelper = OpenWeatherMapHelper(getString(R.string.OPEN_WEATHER_MAP_API_KEY))
+        weatherHelper.setUnits(Units.IMPERIAL)
+        weatherHelper.setLang(Lang.ENGLISH)
+
+        var user: UserModel = dbHelper.getUser(1)
+        var newUser: UserModel = UserModel(user.userId, user.name, user.points + 1, user.consistencyBadge, user.diversityBadge, user.photosBadge, user.greenThumbBadge, user.badgeOfBadges, user.creationDate, user.lat, user.long)
+        dbHelper.updateUser(newUser)
+        weatherHelper.getCurrentWeatherByGeoCoordinates(user.lat, user.long, object :
+            CurrentWeatherCallback {
+            override fun onSuccess(currentWeather: CurrentWeather) {
+                Log.v(
+                    TAG,
+                    "Coordinates: " + currentWeather.coord.lat + ", " + currentWeather.coord.lon + "\n"
+                            + "Weather Description: " + currentWeather.weather[0].description + "\n"
+                            + "Temperature: " + currentWeather.main.tempMax + "\n"
+                            + "Wind Speed: " + currentWeather.wind.speed + "\n"
+                            + "City, Country: " + currentWeather.name + ", " + currentWeather.sys.country
+                )
+
+                checkTemperature(currentWeather.main.tempMax, notificationManager)
+            }
+
+            override fun onFailure(throwable: Throwable) {
+                Log.v(TAG, throwable.message)
+            }
+        })
 
         dbHelper.closeConnection()
         stopSelf()
@@ -146,9 +147,9 @@ class NotificationService : Service() {
         )
     }
 
-    private fun checkTemperature(temperature: Double) {
+    private fun checkTemperature(temperature: Double, notificationManager: NotificationManager) {
 
-        if (temperature < 50) {
+        if (temperature < 90) { //TODO: change this to 50
             // Create an Intent for the activity you want to start
             val resultIntent = Intent(this, MainActivity::class.java)
             // Create the TaskStackBuilder
@@ -159,7 +160,7 @@ class NotificationService : Service() {
                 getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
             }
 
-            val notification = NotificationCompat.Builder(this, "channel_id")
+            val notification = NotificationCompat.Builder(this, "weather")
                 .setSmallIcon(R.drawable.notification_flower)
                 .setContentTitle("Warning: Move your outdoor plants inside")
                 .setContentText("Temperature is $temperature, which is unsafe for outdoor plants.")
@@ -168,9 +169,6 @@ class NotificationService : Service() {
 
             // Removes notification after it is clicked.
             notification.flags = notification.flags or Notification.FLAG_AUTO_CANCEL
-
-            val notificationManager =
-                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
             notificationManager.notify(0, notification)
         }

@@ -44,6 +44,7 @@ Below are a selection of potential badges a user can earn:
 <img src="https://github.com/MobileAppEngg-Group1-Fall2019/Badges/blob/master/greenThumb_1000.png" height="100">
 </p>
 
+Within the app, pressing on a badge will show the user a pop-up containing the description of what the badge is for.
 You can view the rest of the badges in [this repository](https://github.com/MobileAppEngg-Group1-Fall2019/Badges).
 
 

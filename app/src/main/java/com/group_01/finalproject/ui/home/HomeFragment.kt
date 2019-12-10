@@ -87,6 +87,7 @@ class HomeFragment : Fragment() {
     // Create and add cards to display care history.
     @SuppressLint("SetTextI18n")
     private fun createHistory() {
+        mCare?.reverse()
         mCare?.forEach {
             val layoutInflater = LayoutInflater.from(context)
             val plant = dbHelper.getPlant(it.plantID)

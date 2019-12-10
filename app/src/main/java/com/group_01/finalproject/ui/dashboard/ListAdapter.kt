@@ -7,6 +7,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.group_01.finalproject.R
+import com.group_01.finalproject.db.CareModel
 import com.group_01.finalproject.db.DBInterface
 import com.group_01.finalproject.db.DbBitmapUtil
 import com.group_01.finalproject.db.PlantModel
@@ -30,7 +31,9 @@ class ListAdapter (private val list: ArrayList<PlantModel>, private val dBHelper
             // Update last watered plant
             val currentTime: Date = Calendar.getInstance().time
             val updatedPlant = PlantModel(plant.plantId, plant.name, plant.type, plant.status, plant.indoor, plant.age, currentTime)
+            val newCare = CareModel(0, plant.plantId, currentTime, "caption", true)
             dBHelper.updatePlant(updatedPlant)
+            dBHelper.insertCare(newCare)
             list.remove(plant)
             list.add(updatedPlant)
             this.notifyDataSetChanged()

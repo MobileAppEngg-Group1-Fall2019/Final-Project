@@ -23,7 +23,6 @@ import kotlin.math.log2
 
 class HomeFragment : Fragment() {
 
-    private lateinit var homeViewModel: HomeViewModel
     private lateinit var dbHelper: DBInterface
     private var mUser: UserModel? = null
     private var mCare: ArrayList<CareModel>? = null
@@ -38,7 +37,6 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        homeViewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 

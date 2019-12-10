@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
 
-        // TODO :- vvvvv TEST ONLY, REMOVE FOR FINAL BUILD vvvvv
+        // TODO :- vvvvv For testing and grading purposes. This would be deleted if actually deployed. vvvvv
         val curTime: Date = Calendar.getInstance().time
 
         val testCare = arrayListOf(
@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity() {
             1,
             curTime
         )
-        // TODO :- ^^^^^ TEST ONLY, REMOVE FOR FINAL BUILD ^^^^^
+        // TODO :- ^^^^^ For testing and grading purposes. This would be deleted if actually deployed. ^^^^^
 
         if (dbHelper.getAllUsers().size == 0) { // Creates the initial user.
             val currentTime: Date = Calendar.getInstance().time
@@ -81,12 +81,12 @@ class MainActivity : AppCompatActivity() {
             val initUser = UserModel(
                 1,
                 "user_name",
-                99999,
-                5,
-                6,
-                5,
-                5,
-                3,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
                 currentTime,
                 0.0,
                 0.0
@@ -94,12 +94,12 @@ class MainActivity : AppCompatActivity() {
 
             dbHelper.insertUser(initUser) // Insert User into database.
 
-            // TODO :- vvvvv TEST ONLY, REMOVE FOR FINAL BUILD vvvvv
+            // TODO :- vvvvv For testing and grading purposes. This would be deleted if actually deployed. vvvvv
             dbHelper.insertPlant(testPlant)
             testCare.forEach {
                 dbHelper.insertCare(it)
             }
-            // TODO :- ^^^^^ TEST ONLY, REMOVE FOR FINAL BUILD ^^^^^
+            // TODO :- ^^^^^ For testing and grading purposes. This would be deleted if actually deployed. ^^^^^
         }
 
 
@@ -156,12 +156,24 @@ class MainActivity : AppCompatActivity() {
                 override fun onLocationChanged(location: Location) {
                     mlocation = location
                     Log.d("#### Location Changes", location.toString())
-                    val currentTime: Date = Calendar.getInstance().getTime();
-                    if(dbHelper.getAllUsers().size == 0) {
-                        val user: UserModel = UserModel(1, "Bobert", 0, 0, 0, 0, 0, 0, currentTime, location.latitude, location.longitude)
-                        val userid = dbHelper.insertUser(user)
-                    }
 
+                    val u = dbHelper.getUser(1)
+                    val user = UserModel(
+                        u.userId,
+                        u.name,
+                        u.points,
+                        u.consistencyBadge,
+                        u.diversityBadge,
+                        u.photosBadge,
+                        u.greenThumbBadge,
+                        u.badgeOfBadges,
+                        u.creationDate,
+
+                        // Updates Location when location services are up.
+                        location.latitude,
+                        location.longitude
+                    )
+                    dbHelper.updateUser(user)
                 }
 
                 override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {

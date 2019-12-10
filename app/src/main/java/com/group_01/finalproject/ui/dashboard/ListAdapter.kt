@@ -35,7 +35,7 @@ class ListAdapter (private val list: ArrayList<PlantModel>, private val dBHelper
             dBHelper.updatePlant(updatedPlant)
             dBHelper.insertCare(newCare)
             list.remove(plant)
-            list.add(updatedPlant)
+            list.add(position, updatedPlant)
             this.notifyDataSetChanged()
             Toast.makeText(view.context, "Thank you for watering ${plant.name}!", Toast.LENGTH_SHORT).show()
             true
